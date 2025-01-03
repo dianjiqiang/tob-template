@@ -33,7 +33,9 @@
       "store/*": ["src/store/*"],
       "assets/*": ["src/assets/*"],
       "context/*": ["src/context/*"],
-    }
+      "views/*": ["src/views/*"],
+    },
+    "types": ["vite/client"]
   },
-  "include": ["src", "src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src", "src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts"]
 }

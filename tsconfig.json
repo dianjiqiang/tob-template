@@ -15,6 +15,7 @@
       "store/*": ["src/store/*"],
       "assets/*": ["src/assets/*"],
       "context/*": ["src/context/*"],
+      "views/*": ["src/views/*"],
     }
   }
 }

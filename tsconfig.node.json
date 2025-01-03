@@ -19,6 +19,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "types": ["vite/client"],
     
     "baseUrl": ".",
     "paths": {
@@ -30,7 +31,8 @@
       "store/*": ["src/store/*"],
       "assets/*": ["src/assets/*"],
       "context/*": ["src/context/*"],
+      "views/*": ["src/views/*"],
     }
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vite-env.d.ts"]
 }

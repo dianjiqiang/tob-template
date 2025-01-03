@@ -4,7 +4,13 @@ import { Button, Card } from "antd"
 
 import { ThemeContext } from "context/ThemeContext"
 import { getBodyStyle } from "assets/theme"
+import { AppStyled } from "./style"
 import routes from "router/index"
+
+import loadRouter from "./utils/loadRouter"
+
+loadRouter(['system-manage-systemSetting', 'system-manage-userInfo'])
+
 
 function App() {
   const context = useContext(ThemeContext)
@@ -23,7 +29,7 @@ function App() {
   }, [context])
 
   return (
-    <>
+    <AppStyled>
       <div>hello</div>
       <Card></Card>
       <Button type="primary" onClick={() => changeTheme()}>亮色</Button>
@@ -31,7 +37,7 @@ function App() {
       <Suspense fallback="">
         <div className="main">{useRoutes(routes)}</div>
       </Suspense>
-    </>
+    </AppStyled>
   )
 }
 

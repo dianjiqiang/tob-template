@@ -40,7 +40,6 @@ const basicDarkThemeData = {
   errorColor: '#FF4D4F',
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const ThemeContext = React.createContext<ThemeDataType>(basicThemeData);
 
 interface ThemeProviderProps {
