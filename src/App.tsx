@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, Suspense } from "react"
+import { useDispatch } from "react-redux"
 import {useRoutes} from 'react-router-dom'
 import { Button, Card } from "antd"
 
@@ -7,12 +8,14 @@ import { getBodyStyle } from "assets/theme"
 import { AppStyled } from "./style"
 import routes from "router/index"
 
-import loadRouter from "./utils/loadRouter"
+import loadRouter from "@/utils/loadRouter"
+import { fetchHomeMutailDataAction } from "@/store/modules/user"
 
 loadRouter(['system-manage-systemSetting', 'system-manage-userInfo'])
 
 
 function App() {
+  const dispatch = useDispatch()
   const context = useContext(ThemeContext)
   useEffect(() => {
     const body: any = document.body
@@ -37,6 +40,7 @@ function App() {
       <Suspense fallback="">
         <div className="main">{useRoutes(routes)}</div>
       </Suspense>
+      <Button type="primary" onClick={() => dispatch(fetchHomeMutailDataAction())}>点击登录</Button>
     </AppStyled>
   )
 }

@@ -13,3 +13,4 @@ export default constes;
 // 此变量为同步变量(手动)
 export * from './modules/gatWay'
 export * from './modules/rules'
+export * from './modules/statusCode'

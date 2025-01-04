@@ -12,7 +12,7 @@ export interface ThemeDataType extends ThemeType {
 }
 
 
-const basicThemeData: ThemeDataType = {
+export const basicThemeData: ThemeDataType = {
   theme: 'light',
   background: '#fff',
   color: '#333',

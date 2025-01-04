@@ -1,7 +1,6 @@
 import axios from 'axios'
-import {BASE_URL, TIME_OUT} from './config'
 import type { AxiosInstance } from 'axios'
-import type { KeyieRequestConfig } from './type'
+import type { KeyieRequestConfig,KeyieRequestConfigOption } from './type'
 
 export class KeyieRequest {
   instance: AxiosInstance
@@ -27,11 +26,9 @@ export class KeyieRequest {
     // 全局结果拦截器
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('响应成功的拦截')
         return res.data
       },
       (err) => {
-        console.log('响应失败的拦截')
         return err
       }
     )
@@ -48,7 +45,7 @@ export class KeyieRequest {
   }
 
   // 封装网络请求的方法
-  request<T = any>(config: KeyieRequestConfig<T>) {
+  request<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
     if (config.interceptors?.onFulfilled) {
       config = config.interceptors.onFulfilled(config)
     }
@@ -57,28 +54,28 @@ export class KeyieRequest {
         .request<any, T>(config)
         .then((res) => {
           if (config.interceptors?.onFulfilledRes) {
-            res = config.interceptors.onFulfilledRes(res)
+            res = config.interceptors.onFulfilledRes(res, options)
           }
           resolve(res)
         })
         .catch((err) => reject(err))
     })
   }
-  get<T = any>(config: KeyieRequestConfig<T>) {
-    return this.request({ ...config, method: 'GET' })
+  get<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
+    return this.request({ ...config, method: 'GET' }, options)
   }
-  post<T = any>(config: KeyieRequestConfig<T>) {
-    return this.request({ ...config, method: 'POST' })
+  put<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
+    return this.request({ ...config, method: 'PUT' }, options)
   }
-  delete<T = any>(config: KeyieRequestConfig<T>) {
-    return this.request({ ...config, method: 'DELETE' })
+  post<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
+    return this.request({ ...config, method: 'POST' }, options)
   }
-  patch<T = any>(config: KeyieRequestConfig<T>) {
-    return this.request({ ...config, method: 'PATCH' })
+  delete<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
+    return this.request({ ...config, method: 'DELETE' }, options)
+  }
+  patch<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
+    return this.request({ ...config, method: 'PATCH' }, options)
   }
 }
 
-export default new KeyieRequest({
-  baseURL: BASE_URL,
-  timeout: TIME_OUT,
-})
+export default KeyieRequest
