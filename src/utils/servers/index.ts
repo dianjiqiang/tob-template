@@ -1,58 +1,72 @@
-import {BASE_URL, TIME_OUT} from './config'
-import type { KeyieRequestConfigOption } from './type'
-import KeyieRequest from './request'
-import { statusCode } from '@/const/modules/statusCode';
+import KeyieRequest from "./request"
+import { statusCode } from "@/const/modules/statusCode"
 
-import { statusOperation } from './statusOperation';
+import { BASE_URL, TIME_OUT } from "./config"
+import eventBus from "../eventbus"
+import { statusOperation } from "./statusOperation"
+
+import type { KeyieRequestConfigOption } from "./type"
+import type { AxiosRequestConfig } from "axios"
 
 interface ResultDataType {
-  code: number,
-  data: any,
-  msg: string,
+  code: number
+  data: any
+  msg: string
 }
 
-const baseOption: KeyieRequestConfigOption = {
-  useMessage: 'none',
-  useGlobalLoading: false,
-  timeout: BASE_URL,
-  innerTrycatch: false,
-  resultToJSON: false,
-  resultToParse: false
+interface KeyieAxiosRequestConfigType extends AxiosRequestConfig<any> {
+  keyieOptions?: KeyieRequestConfigOption
 }
 
 const keyieRequest = new KeyieRequest({
   baseURL: BASE_URL,
   timeout: TIME_OUT,
   interceptors: {
-    onFulfilledRes(res: ResultDataType | any, options: KeyieRequestConfigOption = baseOption) {
-      const {code, msg} = res
-      const {
-        useMessage = 'none',
-        useGlobalLoading = false,
-        innerTrycatch = false,
-        resultToJSON = false,
-        resultToParse = false
-      } = options
-      
-      if (code !== statusCode.SUCCESS) {
-        statusOperation(code, useMessage, msg)
-        if (innerTrycatch) {
-          return Promise.reject(res)
+    onFulfilled: (config: KeyieAxiosRequestConfigType) => {
+      const { timeout = BASE_URL, useGlobalLoading = false } = config.keyieOptions ? config.keyieOptions : {}
+      if (useGlobalLoading) {
+        eventBus.emit("changeGlobLoading", true)
+      }
+      config.timeout = timeout
+
+      return config
+    },
+    onFulfilledRes: (res: ResultDataType | any) => {
+      const { status } = res
+      if (status !== 200) {
+        return
+      } else {
+        const { data, config, code, msg } = res
+        const {
+          useMessage = "none",
+          innerTrycatch = false,
+          resultToJSON = false,
+          useGlobalLoading = false,
+          resultToParse = false,
+        } = config.keyieOptions ? config.keyieOptions : {}
+        if (useGlobalLoading) {
+          eventBus.emit("changeGlobLoading", false)
         }
+        if (code !== statusCode.SUCCESS) {
+          statusOperation(code, useMessage, msg)
+          if (innerTrycatch) {
+            return Promise.reject(data.data)
+          }
+          throw Error(msg)
+        }
+        if (resultToJSON) {
+          return JSON.stringify(data.data)
+        }
+        if (resultToParse) {
+          return JSON.parse(data.data)
+        }
+        return data.data
       }
-      if (resultToJSON) {
-        return JSON.stringify(res.data)
-      }
-      if (resultToParse) {
-        return JSON.parse(res.data)
-      }
-      return res.data
     },
-    onRejectedRes(error) {
-      console.log(error);
-      
+    onRejectedRes: (error) => {
+      return error
     },
-  }
+  },
 })
 
 export default keyieRequest

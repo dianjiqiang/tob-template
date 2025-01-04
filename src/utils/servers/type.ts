@@ -1,7 +1,7 @@
 import type { AxiosResponse, AxiosRequestConfig } from 'axios'
 
 export interface keyieRequestType<T = AxiosResponse> {
-  onFulfilled?: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any>
+  onFulfilled?: (config: AxiosRequestConfig<any>, options?: KeyieRequestConfig) => AxiosRequestConfig<any>
   onRejected?: (error: any) => any
   onFulfilledRes?: (res: T, options?: KeyieRequestConfig) => T
   onRejectedRes?: (error: any) => any

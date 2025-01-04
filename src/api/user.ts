@@ -9,5 +9,7 @@ enum UserApi {
 export const apiGetCurrentInfo = () => {
   return keyieRequest.get({
     url: UserApi.getCurrentInfo,
+  }, {
+    useGlobalLoading: true
   });
 };

@@ -13,9 +13,8 @@ export class KeyieRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // 给每个响应头加上token
-        config.data = { token: 'xxx' }
+        config.headers.AccessToken = 'xxx'
 
-        console.log('请求成功的拦截')
         return config
       },
       (err) => {
@@ -26,7 +25,7 @@ export class KeyieRequest {
     // 全局结果拦截器
     this.instance.interceptors.response.use(
       (res) => {
-        return res.data
+        return res
       },
       (err) => {
         return err
@@ -34,28 +33,27 @@ export class KeyieRequest {
     )
 
     //添加局部拦截器
-    this.instance.interceptors.request.use(
-      config.interceptors?.onFulfilled as any,
-      config.interceptors?.onRejected
-    )
-    this.instance.interceptors.response.use(
-      config.interceptors?.onFulfilledRes,
-      config.interceptors?.onRejectedRes
-    )
+    if (config.interceptors?.onFulfilled || config.interceptors?.onRejected) {
+      this.instance.interceptors.request.use(
+        config.interceptors.onFulfilled as any,
+        config.interceptors.onRejected
+      )
+    }
+    if (config.interceptors?.onFulfilledRes || config.interceptors?.onRejectedRes) {
+      this.instance.interceptors.response.use(
+        config.interceptors.onFulfilledRes,
+        config.interceptors.onRejectedRes
+      )
+    }
   }
 
   // 封装网络请求的方法
   request<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
-    if (config.interceptors?.onFulfilled) {
-      config = config.interceptors.onFulfilled(config)
-    }
     return new Promise<T>((resolve, reject) => {
+      const requestConfig = { ...config, keyieOptions: options }
       this.instance
-        .request<any, T>(config)
+        .request<any, T>(requestConfig)
         .then((res) => {
-          if (config.interceptors?.onFulfilledRes) {
-            res = config.interceptors.onFulfilledRes(res, options)
-          }
           resolve(res)
         })
         .catch((err) => reject(err))
