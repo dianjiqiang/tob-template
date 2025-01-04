@@ -1,15 +1,21 @@
-import React, { memo } from "react";
+import React, { memo } from "react"
 import type { ReactNode } from "react"
-import { LoginStyled } from "./style";
+import { LoginStyled } from "./style"
+
+import ThemeChange from "@/components/ThemeChange"
 
 interface LoginType {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 const Login: React.FC<LoginType> = memo(() => {
-  return <LoginStyled>Login</LoginStyled>;
-});
+  return (
+    <LoginStyled>
+      <ThemeChange></ThemeChange>
+    </LoginStyled>
+  )
+})
 
-Login.displayName = "Login";
+Login.displayName = "Login"
 
-export default Login;
+export default Login
