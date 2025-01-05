@@ -1,7 +1,6 @@
-import type { ThemeDataType } from "context/ThemeContext";
+import type { ThemeDataType } from "context/ThemeContext"
 
 export const getBodyStyle = (theme: ThemeDataType) => {
-
   return `
       background-color: ${theme.background};
       color: ${theme.color};
@@ -13,5 +12,5 @@ export const getBodyStyle = (theme: ThemeDataType) => {
       --text-1: ${theme["text-1"]};
       --text-2: ${theme["text-2"]};
       --text-3: ${theme["text-3"]};
-    `;
+    `
 }

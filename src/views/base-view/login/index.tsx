@@ -2,7 +2,8 @@ import React, { memo } from "react"
 import type { ReactNode } from "react"
 import { LoginStyled } from "./style"
 
-import ThemeChange from "@/components/ThemeChange"
+import LoginForm from "./cpns/LoginForm"
+import LoginHeader from "./cpns/LoginHeader"
 
 interface LoginType {
   children?: ReactNode
@@ -11,7 +12,16 @@ interface LoginType {
 const Login: React.FC<LoginType> = memo(() => {
   return (
     <LoginStyled>
-      <ThemeChange></ThemeChange>
+      <div className="login-header">
+        <LoginHeader></LoginHeader>
+      </div>
+      <div className="project-name text-1">
+        <h1>{import.meta.env.VITE_PROJECT_NAME}</h1>
+      </div>
+      <div className="login-left"></div>
+      <div className="login-right">
+        <LoginForm></LoginForm>
+      </div>
     </LoginStyled>
   )
 })
