@@ -8,8 +8,8 @@ import { ThemeContext } from "context/ThemeContext"
 interface ThemeChangeType {
   children?: ReactNode
 }
-type ChangeEvent = React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>
-type MouseEvent = React.MouseEvent<HTMLButtonElement, MouseEvent>
+type ChangeEvent = React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+type MouseEvent = React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
 
 const ThemeChange: React.FC<ThemeChangeType> = memo(() => {
   const context = useContext(ThemeContext)
@@ -17,36 +17,50 @@ const ThemeChange: React.FC<ThemeChangeType> = memo(() => {
   const { theme } = context
 
   const handleChangeTheme = (_: boolean, event: ChangeEvent) => {
-    const clientX = (event as MouseEvent).clientX
-    const clientY = (event as MouseEvent).clientY
-    const doAnimate = () => {
-      const radius = Math.hypot(
-        Math.max(clientX, window.innerWidth - clientX),
-        Math.max(clientY, window.innerHeight - clientY)
-      )
-
-      const clipPath = [`circle(0px at ${clientX}px ${clientY}px)`, `circle(${radius}px at ${clientX}px ${clientY}px)`]
-
-      document.documentElement.animate(
-        { clipPath: _ ? clipPath.reverse() : clipPath },
-        {
-          duration: 600,
-          pseudoElement: _ ? "::view-transition-old(root)" : "::view-transition-new(root)",
-        }
-      )
-    }
-    if (document.startViewTransition) {
-      document
-        .startViewTransition(context.setThemeState(context.theme === "light" ? "dark" : "light"))
-        .ready.then(doAnimate)
-    } else {
+    const transition = document.startViewTransition(() => {
       if (context.setThemeState) context.setThemeState(context.theme === "light" ? "dark" : "light")
-    }
+    })
+
+    transition.ready.then(() => {
+      const { clientX, clientY } = (event as MouseEvent)
+      const radius = Math.hypot(
+        Math.max(clientX, innerWidth - clientX),
+        Math.max(clientY, innerHeight - clientY)
+      )
+      if (context.theme === 'dark') {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0% at ${clientX}px ${clientY}px)`,
+              `circle(${radius}px at ${clientX}px ${clientY}px)`
+            ]
+          },
+          {
+            duration: 500,
+            pseudoElement: '::view-transition-new(root)'
+          }
+        )
+      }else{
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(${radius}px at ${clientX}px ${clientY}px)`,
+              `circle(0% at ${clientX}px ${clientY}px)`
+            ]
+          },
+          {
+            duration: 500,
+            pseudoElement: '::view-transition-old(root)'
+          }
+        )
+      }
+    })
   }
 
   return (
     <ThemeChangeStyled>
       <Switch
+        className={"theme-button"}
         value={theme === "light"}
         onChange={(type, event) => handleChangeTheme(type, event)}
         checkedChildren="🌞"

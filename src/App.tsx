@@ -23,7 +23,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const body: any = document.body
+    const body: any = document.documentElement
     body.classList.remove("dark")
     body.classList.remove("light")
     body.classList.add(context.theme)
