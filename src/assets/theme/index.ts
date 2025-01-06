@@ -4,11 +4,11 @@ export const getBodyStyle = (theme: ThemeDataType) => {
   return `
       background-color: ${theme.background};
       color: ${theme.color};
-      --primaryColor: ${theme["primary-color"]};
-      --successColor: ${theme.successColor};
-      --dangerColor: ${theme.dangerColor};
-      --disabledColor: ${theme.disabledColor};
-      --errorColor: ${theme.errorColor};
+      --primary-color: ${theme["primary-color"]};
+      --success-color: ${theme["success-color"]};
+      --danger-color: ${theme["danger-color"]};
+      --disabled-color: ${theme["disabled-color"]};
+      --error-color: ${theme["error-color"]};
       --text-1: ${theme["text-1"]};
       --text-2: ${theme["text-2"]};
       --text-3: ${theme["text-3"]};

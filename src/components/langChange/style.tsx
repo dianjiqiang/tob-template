@@ -16,10 +16,10 @@ export const LangChangeStyled = styled.div<ThemeDataType>`
       }
     }
     .popover-item-active {
-      color: ${(props) => props.primaryColor} !important;
-      background-color: ${(props) => props.activeBackground} !important;
+      color: ${(props) => props["primary-color"]} !important;
+      background-color: ${(props) => props["active-background"]} !important;
       &:hover {
-        background-color: ${(props) => props.activeHoverBackground} !important;
+        background-color: ${(props) => props["active-hover-background"]} !important;
       }
     }
   }

@@ -19,14 +19,14 @@ export const basicThemeData: ThemeDataType = {
   "text-1": "#000",
   "text-2": "#333",
   "text-3": "#666",
-  hoverBackground: "#F5F5F5",
-  activeBackground: "#E3F4FC",
-  activeHoverBackground: "#A5D3F0",
-  disabledColor: "rgba(0, 0, 0, 0.25)",
-  primaryColor: "#1677FF",
-  successColor: "#52C41A",
-  dangerColor: "#FF4D4F", // 修正拼写错误
-  errorColor: "#FF4D4F",
+  "hover-background": "#F5F5F5",
+  "active-background": "#E3F4FC",
+  "active-hover-background": "#A5D3F0",
+  "disabled-color": "rgba(0, 0, 0, 0.25)",
+  "primary-color": "#1677FF",
+  "success-color": "#52C41A",
+  "danger-color": "#FF4D4F", // 修正拼写错误
+  "error-color": "#FF4D4F",
 }
 
 const basicDarkThemeData = {
@@ -36,14 +36,14 @@ const basicDarkThemeData = {
   "text-1": "#fff",
   "text-2": "#ccc",
   "text-3": "#999",
-  hoverBackground: "#313131",
-  activeBackground: "#111822",
-  activeHoverBackground: "#0F2035",
-  disabledColor: "rgba(255, 255, 255, 0.25)",
-  primaryColor: "#1677FF",
-  successColor: "#52C41A",
-  dangerColor: "#FF4D4F", // 修正拼写错误
-  errorColor: "#FF4D4F",
+  "hover-background": "#313131",
+  "active-background": "#111822",
+  "active-hover-background": "#0F2035",
+  "disabled-color": "rgba(255, 255, 255, 0.25)",
+  "primary-color": "#1677FF",
+  "success-color": "#52C41A",
+  "danger-color": "#FF4D4F", // 修正拼写错误
+  "error-color": "#FF4D4F",
 }
 
 export const ThemeContext = React.createContext<ThemeDataType>(basicThemeData)
