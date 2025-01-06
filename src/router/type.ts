@@ -1,4 +1,4 @@
-import type { ForwardRefExoticComponent, RefAttributes, LazyExoticComponent, FC, ReactDOM } from "react"
+import type { ForwardRefExoticComponent, RefAttributes, LazyExoticComponent, FC } from "react"
 import type { AntdIconProps } from "@ant-design/icons/lib/components/AntdIcon"
 import { Navigate } from "react-router-dom"
 
@@ -7,7 +7,8 @@ export interface routesType {
   name?: string
   label?: string
   icon?: ForwardRefExoticComponent<Omit<AntdIconProps, "ref"> & RefAttributes<HTMLSpanElement>>
-  element?: LazyExoticComponent<FC<ReactDOM>> | typeof Navigate
+  element?: LazyExoticComponent<FC<any>> | typeof Navigate | React.ReactElement | null
   rules?: string[]
   children?: routesType[]
+  no?: number
 }

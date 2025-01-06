@@ -16,6 +16,7 @@ export const initialRoutes = [
   {
     path: "/about",
     element: <About></About>,
+    no: 10,
   },
   {
     path: "/login",
@@ -35,7 +36,7 @@ export const initialRoutes = [
   },
 ]
 
-export const excludeRoutes = ["/login", "/500", "/503"]
+export const excludeRoutes = ["/login", "/500", "/503", "/*", "/"]
 
 export const routes: RouteObject[] = initialRoutes
 
