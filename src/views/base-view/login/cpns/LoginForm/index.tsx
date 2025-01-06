@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { LoginFormStyled } from "./style"
 
 import { Button, Checkbox, Form, Input, Card } from "antd"
-import type { FormProps } from "antd"
+import { useTranslation } from "react-i18next"
 
 interface LoginFormType {
   children?: ReactNode
@@ -16,34 +16,49 @@ type FieldType = {
 }
 
 const LoginForm: React.FC<LoginFormType> = memo(() => {
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values)
-  }
+  const { t } = useTranslation()
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-    console.log("Failed:", errorInfo)
+  const [form] = Form.useForm()
+
+  const handleSubmitClick = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        console.log(values)
+      })
+      .catch((error) => {
+        console.error("表单校验失败", error)
+      })
   }
 
   return (
     <LoginFormStyled>
       <Card className="form-card-wrapper">
         <h2 className="text-1" style={{ textAlign: "center" }}>
-          {import.meta.env.VITE_PROJECT_NAME}
+          {t("user.title")}
         </h2>
         <Form
+          form={form}
           labelWrap={false}
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 18 }}
+          className="form-wrapper"
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 16 }}
           style={{ maxWidth: 550 }}
           initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
-          <Form.Item<FieldType> label="账号" name="username" rules={[{ required: true, message: "请输入您的账号" }]}>
+          <Form.Item<FieldType>
+            label={t("user.user")}
+            name="username"
+            rules={[{ required: true, message: t("placeholder.userName") }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item<FieldType> label="密码" name="password" rules={[{ required: true, message: "请输入您的密码" }]}>
+          <Form.Item<FieldType>
+            label={t("user.password")}
+            name="password"
+            rules={[{ required: true, message: t("placeholder.password") }]}
+          >
             <Input.Password />
           </Form.Item>
           <Form.Item<FieldType>
@@ -52,14 +67,14 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
             style={{ textAlign: "right" }}
             wrapperCol={{ span: 22 }}
           >
-            <Checkbox>记住密码</Checkbox>
-          </Form.Item>
-          <Form.Item label={null}>
-            <Button type="primary" htmlType="submit" style={{ width: "280px" }}>
-              登录
-            </Button>
+            <Checkbox>{t("user.rememberMe")}</Checkbox>
           </Form.Item>
         </Form>
+        <div className="form-submit-button">
+          <Button type="primary" size="large" style={{ width: "320px" }} onClick={handleSubmitClick}>
+            {t("user.login")}
+          </Button>
+        </div>
       </Card>
     </LoginFormStyled>
   )

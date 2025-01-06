@@ -7,11 +7,12 @@ import { ThemeContext } from "context/ThemeContext"
 
 interface ThemeChangeType {
   children?: ReactNode
+  style?: React.CSSProperties
 }
 type ChangeEvent = React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
 type MouseEvent = React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
 
-const ThemeChange: React.FC<ThemeChangeType> = memo(() => {
+const ThemeChange: React.FC<ThemeChangeType> = memo((props) => {
   const context = useContext(ThemeContext)
 
   const { theme } = context
@@ -49,7 +50,7 @@ const ThemeChange: React.FC<ThemeChangeType> = memo(() => {
   }
 
   return (
-    <ThemeChangeStyled>
+    <ThemeChangeStyled style={props?.style}>
       <Switch
         className={"theme-button"}
         value={theme === "light"}

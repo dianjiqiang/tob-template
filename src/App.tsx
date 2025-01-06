@@ -7,6 +7,7 @@ import { AppStyled } from "./style"
 import eventBus from "@/utils/eventbus"
 
 import loadRouter from "@/utils/loadRouter"
+import './i18n';
 
 loadRouter(["system-manage-systemSetting", "system-manage-userInfo"])
 

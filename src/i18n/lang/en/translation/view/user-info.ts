@@ -1,0 +1,17 @@
+export default {
+  nickname: 'Nickname',
+  role: 'Role',
+  email: 'Email',
+  phone: 'Phone Number',
+  avatar: 'Avatar',
+  sex: 'Sex',
+  birthday: 'Birthday',
+  address: 'Address',
+  signature: 'Signature',
+  password: 'Password',
+  confirmPassword: 'Confirm Password',
+  oldPassword: 'Old Password',
+  newPassword: 'New Password',
+  confirmNewPassword: 'Confirm New Password',
+  loginPassword: 'Login Password',
+}

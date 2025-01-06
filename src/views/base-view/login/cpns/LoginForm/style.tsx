@@ -6,6 +6,13 @@ export const LoginFormStyled = styled.div`
   width: 80%;
   align-items: center;
   .form-card-wrapper {
-    width: 450px;
+    min-width: 450px;
+
+    .form-wrapper{
+    }
+    .form-submit-button{
+      display: flex;
+      justify-content: center;
+    }
   }
 `

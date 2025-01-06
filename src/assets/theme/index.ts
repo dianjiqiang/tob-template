@@ -4,7 +4,7 @@ export const getBodyStyle = (theme: ThemeDataType) => {
   return `
       background-color: ${theme.background};
       color: ${theme.color};
-      --primaryColor: ${theme.primaryColor};
+      --primaryColor: ${theme["primary-color"]};
       --successColor: ${theme.successColor};
       --dangerColor: ${theme.dangerColor};
       --disabledColor: ${theme.disabledColor};
@@ -12,5 +12,8 @@ export const getBodyStyle = (theme: ThemeDataType) => {
       --text-1: ${theme["text-1"]};
       --text-2: ${theme["text-2"]};
       --text-3: ${theme["text-3"]};
+      --hover-background: ${theme["hover-background"]};
+      --active-background: ${theme["active-background"]}";
+      --active-hover-background: ${theme["active-hover-background"]}";
     `
 }
