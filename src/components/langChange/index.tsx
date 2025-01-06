@@ -30,7 +30,7 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
     setOpen(false)
   }
   return (
-    <LangChangeStyled {...theme}>
+    <LangChangeStyled {...theme} setThemeState={undefined}>
       <div className="popover-wrapper">
         <Popover
           content={options.map((item) => (
