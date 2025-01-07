@@ -1,6 +1,9 @@
 import React, { memo } from "react"
 import type { ReactNode } from "react"
 import { LoginFormStyled } from "./style"
+import { apiPostLogin } from "@/api/user"
+import { useDispatch } from "react-redux"
+import { setToken } from "@/store/modules/user"
 
 import { Button, Checkbox, Form, Input, Card } from "antd"
 import { useTranslation } from "react-i18next"
@@ -17,14 +20,25 @@ type FieldType = {
 
 const LoginForm: React.FC<LoginFormType> = memo(() => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
 
   const [form] = Form.useForm()
 
   const handleSubmitClick = () => {
     form
       .validateFields()
-      .then((values) => {
-        console.log(values)
+      .then(async (values) => {
+        const res = await apiPostLogin(values)
+
+        localStorage.setItem("token", res.token)
+        dispatch(setToken(res.token))
+        if (values.remember === true) {
+          localStorage.setItem("username", values.username)
+          localStorage.setItem("password", values.password)
+        } else {
+          localStorage.setItem("username", values.username)
+          localStorage.removeItem("username")
+        }
       })
       .catch((error) => {
         console.error("表单校验失败", error)
@@ -50,6 +64,7 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
           <Form.Item<FieldType>
             label={t("user.user")}
             name="username"
+            initialValue={localStorage.getItem("username")}
             rules={[{ required: true, message: t("placeholder.userName") }]}
           >
             <Input />
@@ -57,6 +72,7 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
           <Form.Item<FieldType>
             label={t("user.password")}
             name="password"
+            initialValue={localStorage.getItem("password")}
             rules={[{ required: true, message: t("placeholder.password") }]}
           >
             <Input.Password />

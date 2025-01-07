@@ -1,16 +1,106 @@
-import { MockMethod } from 'vite-plugin-mock'
+import { MockMethod } from "vite-plugin-mock"
 export default [
   {
-    url: '/basic-api/user-server/getCurrentInfo',
-    method: 'get',
+    url: `/basic-api/user-server/login`,
+    method: "post",
+    response: (params: any) => {
+      const { username, password } = params.body
+      if (username === "keyie" && password === "yuyubaobao") {
+        return {
+          code: 200,
+          data: {
+            token: "this is yuyubaobao token" + Math.random() * 100,
+          },
+        }
+      } else {
+        return {
+          code: -1,
+          msg: "用户名或密码错误",
+        }
+      }
+    },
+  },
+  {
+    url: "/basic-api/user-server/getCurrentInfo",
+    method: "get",
     response: () => {
       return {
-        code: 500,
-        msg: '服务器链接错误'
-        // data: {
-        //   name: 'react-admin',
-        //   age: 18,
-        // },
+        code: 200,
+        data: {
+          userId: "1660595994951159808",
+          deptId: "1660538223547387904",
+          deptName: null,
+          loginName: "HGengDatest123",
+          userName: "宁波子用户",
+          tenantSiteCode: "NBGYZuh_Nbtest",
+          tenantName: null,
+          siteName: null,
+          userType: "02",
+          email: null,
+          phonenumber: "15126663511",
+          sex: "0",
+          sexName: "女",
+          avatar: "",
+          status: "0",
+          loginIp: "",
+          loginDate: "2025-01-07 09:59:43",
+          remark: "",
+          roles: ["NBGYZuh_Nbtest_Nbongtest"],
+          permissions: [
+            "app_btn_ag_geAcSetting",
+            "app_btn_ag_geFunctionSetting",
+            "app_btn_ag_geGeSetting",
+            "app_btn_aw_geAcSetting",
+            "app_btn_aw_geFunctionSetting",
+            "app_btn_aw_geGeSetting",
+            "app_catalog_ag_groupApp",
+            "app_catalog_aw_groupAppWeb",
+            "app_menu_ag_gapEliminator",
+            "app_menu_ag_geAlarmRecord",
+            "app_menu_ag_geDeviceList",
+            "app_menu_ag_geDeviceStatistics",
+            "app_menu_ag_historyStat",
+            "app_menu_ag_realtimeStat",
+            "app_menu_ag_runningStat",
+            "app_menu_ag_stateStat",
+            "app_menu_aw_billInQuiry",
+            "app_menu_aw_billManage",
+            "app_menu_aw_gapEliminator",
+            "app_menu_aw_geAlarmRecord",
+            "app_menu_aw_geChartDataSetting",
+            "app_menu_aw_geDeviceList",
+            "app_menu_aw_geDeviceStatistics",
+            "app_menu_aw_geMachineManage",
+            "app_menu_aw_geOutputStatistics",
+            "app_menu_aw_organizationManage",
+            "app_menu_aw_roleManage",
+            "app_menu_aw_systemSetting",
+            "app_menu_aw_userInfo",
+            "app_menu_aw_userManage",
+            "app_opr_ag_geAlarmRecordView",
+            "app_opr_ag_geDeviceListView",
+            "app_opr_ag_geDeviceStatisticsView",
+            "app_opr_ag_historyStatView",
+            "app_opr_ag_realtimeStatView",
+            "app_opr_ag_stateStatView",
+            "app_opr_aw_billInQuiryView",
+            "app_opr_aw_geAlarmRecordView",
+            "app_opr_aw_geChartDataSettingView",
+            "app_opr_aw_geDeviceListView",
+            "app_opr_aw_geDeviceStatisticsView",
+            "app_opr_aw_geMachineManageView",
+            "app_opr_aw_geOutputStatisticsView",
+            "app_opr_aw_organizationManageView",
+            "app_opr_aw_roleManageView",
+            "app_opr_aw_userInfoView",
+            "app_opr_aw_userManageView",
+          ],
+          accessToken: null,
+          endpoint: "https://appfile.grindoctor.cn",
+          aliasId: "770ebe4fdd2e20ae4b4233e22e99ad3f",
+          signature: null,
+          passwordFlag: null,
+        },
       }
     },
   },

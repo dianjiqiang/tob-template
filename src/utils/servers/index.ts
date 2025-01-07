@@ -36,7 +36,8 @@ const keyieRequest = new KeyieRequest({
       if (status !== 200) {
         return
       } else {
-        const { data, config, code, msg } = res
+        const { data, config } = res
+        const { msg, code } = data
         const {
           useMessage = "none",
           innerTrycatch = false,

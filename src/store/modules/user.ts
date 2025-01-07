@@ -1,30 +1,35 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { apiGetCurrentInfo } from '@/api/user'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { apiGetCurrentInfo } from "@/api/user"
 
-// 这种异步的action 不是写在 reducers来的 需要我们额外写  在这里导出出去 在组件中使用  第一个参数:名字,第二个参数: 异步函数
-export const fetchHomeMutailDataAction = createAsyncThunk('get/getUserInfo', async (_,store) => { // 在我们派发这个异步函数的时候 可以传递我们对应的参数 第二个参数为我们的store
-  // 在我们执行这个异步函数的时候 我们的函数有三种状态 见上  我们监听这三种状态需要在我们的 slice中额外写 extraReducers 对象
-  const res = await apiGetCurrentInfo()
-  console.log('res', res);
-  return res
-})
+const initialState = {
+  token: localStorage.getItem("token") ?? "",
+  userInfo: localStorage.getItem("userInfo") ?? {},
+}
+type RootState = typeof initialState
+
+export const asyncGetUserInfo = createAsyncThunk<string, any, { state: RootState }>(
+  "get/getUserInfo",
+  async (_: any, store) => {
+    console.log(_, store)
+    const res = await apiGetCurrentInfo()
+    return res
+  }
+)
 
 const userSlice = createSlice({
-  name: 'counter',
-  initialState: {
-    counter: 888
-  },
+  name: "counter",
+  initialState,
   reducers: {
-    addNumber(state, action) {
-      // 在这里内部已经给我们做了优化的 我们可以直接改变这里面的值  后续会自动给我们返回一个新的state 替换掉以前的state
-      state.counter = state.counter + action.payload
+    setToken(state, { payload }) {
+      localStorage.setItem("token", payload)
+      state.token = payload
     },
-    reduceNumber(state, action) {
-      state.counter = state.counter - action.payload
-    }
-  }
+    setUserInfo(state, { payload }) {
+      state.userInfo = payload
+    },
+  },
 })
 
-export const { addNumber, reduceNumber } = userSlice.actions
+export const { setToken } = userSlice.actions
 
 export default userSlice.reducer
