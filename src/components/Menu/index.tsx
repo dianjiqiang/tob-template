@@ -1,14 +1,19 @@
-import React, { memo } from "react"
+import React, { memo, useMemo } from "react"
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from "@ant-design/icons"
 import { Menu as AntdMenu } from "antd"
 
 import { MenuStyled } from "./style"
+import { getMenuToRoutes } from "@/utils/getMenuToRoutes"
+import { shallowEqual, useSelector } from "react-redux"
 
 import type { MenuProps } from "antd"
 import type { ReactNode } from "react"
+import type { routesType } from "@/router/type"
+import type { RootState } from "@/store"
 
 interface MenuType {
   children?: ReactNode
+  routes?: routesType[]
 }
 
 type MenuItem = Required<MenuProps>["items"][number]
@@ -81,7 +86,18 @@ const items: MenuItem[] = [
   },
 ]
 
-const Menu: React.FC<MenuType> = memo(() => {
+const Menu: React.FC<MenuType> = memo((props) => {
+  const { userInfo } = useSelector((state: RootState) => state.user, shallowEqual)
+  const getMenuItem = useMemo(() => {
+    // console.log(props.routes)
+    if (Array.isArray(props.routes)) {
+      getMenuToRoutes(props.routes, userInfo.permissions)
+    } else {
+      return []
+    }
+    return []
+  }, [props.routes, userInfo.rules])
+
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e)
   }

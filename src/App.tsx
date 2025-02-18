@@ -1,9 +1,10 @@
 import { Suspense, useEffect, useState, memo } from "react"
-import { useRoutes, type RouteObject, useLocation } from "react-router-dom"
+import { useRoutes, useLocation } from "react-router-dom"
 import { Spin } from "antd"
 import initialRoutes, { excludeRoutes } from "router/index"
 import { asyncGetUserInfo } from "./store/modules/user"
 import { useDispatch } from "react-redux"
+import type { routesType } from "./router/type"
 
 import Menu from "./components/Menu"
 
@@ -20,7 +21,7 @@ loadRouter(["system-manage-systemSetting", "system-manage-userInfo"])
 const App = memo(() => {
   const [isLoading, setLoading] = useState(false)
   const [routes, setRoutes] = useState(initialRoutes)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<any>()
 
   const location = useLocation()
   const renderedRoutes = useRoutes(routes)
@@ -29,16 +30,16 @@ const App = memo(() => {
     eventBus.on("changeGlobLoading", (data: boolean) => {
       setLoading(data)
     })
-    eventBus.on("changeRoutes", (data: RouteObject[]) => {
+    eventBus.on("changeRoutes", (data: routesType[]) => {
       setRoutes(data)
     })
   }, [])
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      dispatch(asyncGetUserInfo({} as any))
+      dispatch(asyncGetUserInfo({}))
         .then((res: any) => {
-          console.log(res.payload)
+          console.log(res.payload, "currentUserInfo")
         })
         .catch((error: any) => {
           console.error("Failed to fetch user info:", error)
@@ -56,7 +57,7 @@ const App = memo(() => {
         ) : (
           <div className="app-container">
             <div className="app-left">
-              <Menu></Menu>
+              <Menu routes={routes}></Menu>
             </div>
             <div className="app-right">
               <Suspense fallback="">

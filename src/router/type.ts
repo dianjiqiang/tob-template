@@ -1,8 +1,8 @@
 import type { ForwardRefExoticComponent, RefAttributes, LazyExoticComponent, FC } from "react"
 import type { AntdIconProps } from "@ant-design/icons/lib/components/AntdIcon"
-import { Navigate } from "react-router-dom"
+import { Navigate, RouteObject } from "react-router-dom"
 
-export interface routesType {
+export type routesType = Partial<RouteObject> & {
   path?: string
   name?: string
   label?: string
@@ -11,4 +11,6 @@ export interface routesType {
   rules?: string[]
   children?: routesType[]
   no?: number
+  hiddenMenu?: boolean
+  hiddenChildrenMenu?: boolean
 }

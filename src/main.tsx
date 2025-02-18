@@ -1,4 +1,4 @@
-import { StrictMode } from "react"
+// import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import "assets/css/reset.less"
 import "assets/css/common.less"
@@ -9,13 +9,13 @@ import store from "@/store"
 import App from "@/App.tsx"
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider>
-        <HashRouter>
-          <App />
-        </HashRouter>
-      </ThemeProvider>
-    </Provider>
-  </StrictMode>
+  // <StrictMode>
+  <Provider store={store}>
+    <ThemeProvider>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </ThemeProvider>
+  </Provider>
+  // </StrictMode>
 )
