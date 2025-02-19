@@ -20,7 +20,7 @@ const filterRoute = (routeObj: routesType, validRules: string[] | null): any => 
   if (filteredRules.length === 0) return null
 
   const filteredChildren = routeObj.children
-    ? routeObj.children.map((child) => filterRoute(child, validRules)).filter((child) => child !== null)
+    ? routeObj.children.map((child: any) => filterRoute(child, validRules)).filter((child) => child !== null)
     : []
   return {
     ...routeObj,
@@ -48,5 +48,3 @@ export const getRoutes = async (roles: string[]) => {
 
   eventBus.emit("changeRoutes", initialRoutes)
 }
-// 来点预制菜
-getRoutes(["system-manage", "system-manage-userInfo"])

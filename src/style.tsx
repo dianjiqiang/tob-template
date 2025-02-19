@@ -5,7 +5,7 @@ export const AppStyled = styled.div`
     display: flex;
 
     .app-left {
-      width: 210px;
+      /* width: 220px; */
       height: 100vh;
     }
   }

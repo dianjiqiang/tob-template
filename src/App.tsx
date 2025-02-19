@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState, memo } from "react"
 import { useRoutes, useLocation } from "react-router-dom"
 import { Spin } from "antd"
 import initialRoutes, { excludeRoutes } from "router/index"
-import { asyncGetUserInfo } from "./store/modules/user"
+import { asyncGetUserInfo, setUserInfo } from "./store/modules/user"
 import { useDispatch } from "react-redux"
 import type { routesType } from "./router/type"
 
@@ -39,7 +39,7 @@ const App = memo(() => {
     if (localStorage.getItem("token")) {
       dispatch(asyncGetUserInfo({}))
         .then((res: any) => {
-          console.log(res.payload, "currentUserInfo")
+          dispatch(setUserInfo(res.payload))
         })
         .catch((error: any) => {
           console.error("Failed to fetch user info:", error)

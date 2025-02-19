@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { apiGetCurrentInfo } from "@/api/user"
+import { getRoutes } from "@/router/getRoutes"
 
 export type UserRootState = {
   token: string
@@ -14,9 +15,10 @@ const initialState: UserRootState = {
 
 export const asyncGetUserInfo = createAsyncThunk<string, any, { state: UserRootState }>(
   "get/getUserInfo",
-  async (_: any, store) => {
-    console.log(_, store)
+  // payload: any, { dispatch }
+  async () => {
     const res = await apiGetCurrentInfo()
+    getRoutes(res.permissions)
     return res
   }
 )
@@ -35,6 +37,6 @@ const userSlice = createSlice({
   },
 })
 
-export const { setToken } = userSlice.actions
+export const { setToken, setUserInfo } = userSlice.actions
 
 export default userSlice.reducer

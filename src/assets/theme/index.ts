@@ -15,5 +15,6 @@ export const getBodyStyle = (theme: ThemeDataType) => {
       --hover-background: ${theme["hover-background"]};
       --active-background: ${theme["active-background"]}";
       --active-hover-background: ${theme["active-hover-background"]}";
+      --menu-border-line: ${theme["menu-border-line"]}
     `
 }

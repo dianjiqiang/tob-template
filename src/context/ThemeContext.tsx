@@ -21,6 +21,7 @@ export const basicThemeData: ThemeDataType = {
   "text-3": "#666",
   "hover-background": "#F5F5F5",
   "active-background": "#E3F4FC",
+  "menu-border-line": "#f0f0f0",
   "active-hover-background": "#A5D3F0",
   "disabled-color": "rgba(0, 0, 0, 0.25)",
   "primary-color": "#1677FF",
@@ -38,6 +39,7 @@ const basicDarkThemeData = {
   "text-3": "#999",
   "hover-background": "#313131",
   "active-background": "#111822",
+  "menu-border-line": "#313131",
   "active-hover-background": "#0F2035",
   "disabled-color": "rgba(255, 255, 255, 0.25)",
   "primary-color": "#1677FF",
@@ -64,11 +66,13 @@ const ThemeProvider: React.FC<ThemeProviderProps> = memo((props) => {
     return themeState
   }, [themeState])
 
-  const body: any = document.documentElement
-  body.classList.remove("dark")
-  body.classList.remove("light")
-  body.classList.add(themeState)
-  body.style = getBodyStyle({ ...valueData })
+  const html: any = document.documentElement
+  html.classList.remove("dark")
+  html.classList.remove("light")
+  html.classList.add(themeState)
+  console.log(getBodyStyle({ ...valueData }))
+
+  html.style = getBodyStyle({ ...valueData })
 
   return (
     <ThemeContext.Provider value={{ ...valueData, setThemeState }}>

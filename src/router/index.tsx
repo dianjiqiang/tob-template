@@ -2,6 +2,8 @@ import { lazy } from "react"
 import { Navigate } from "react-router-dom"
 import { routesType } from "./type"
 
+import { CopyrightOutlined } from "@ant-design/icons"
+
 const About = lazy(() => import("views/base-view/about"))
 const NotFound = lazy(() => import("views/base-view/404"))
 const LinkError = lazy(() => import("views/base-view/500"))
@@ -18,6 +20,7 @@ export const initialRoutes = [
     path: "/about",
     name: "About",
     label: "关于",
+    icon: <CopyrightOutlined />,
     element: <About></About>,
     no: 9999,
   },

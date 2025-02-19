@@ -1,4 +1,4 @@
-import React, { memo, useState, useContext } from "react"
+import React, { memo, useState, useContext, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import type { ReactNode } from "react"
 import { LangChangeStyled } from "./style"
@@ -20,12 +20,21 @@ const options = [
 ]
 
 const LangChange: React.FC<LangChangeType> = memo(() => {
-  const [lang, setLang] = useState(localStorage.getItem("lang") ? localStorage.getItem("lang") : "ch")
+  const [lang, setLang] = useState(localStorage.getItem("lang") ? localStorage.getItem("lang") : "zh")
   const [open, setOpen] = useState(false)
   const { i18n } = useTranslation()
   const theme = useContext(ThemeContext)
+
+  useEffect(() => {
+    if (lang) {
+      setLang(lang)
+      i18n.changeLanguage(lang)
+      setOpen(false)
+    }
+  }, [i18n])
   const handleChangeLang = (value: string) => {
     setLang(value)
+    localStorage.setItem("lang", value)
     i18n.changeLanguage(value)
     setOpen(false)
   }

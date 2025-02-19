@@ -1,10 +1,13 @@
-import React, { memo, useMemo } from "react"
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from "@ant-design/icons"
+import React, { memo, useMemo, useState, useEffect, useCallback } from "react"
 import { Menu as AntdMenu } from "antd"
 
 import { MenuStyled } from "./style"
 import { getMenuToRoutes } from "@/utils/getMenuToRoutes"
 import { shallowEqual, useSelector } from "react-redux"
+import { useNavigate, useLocation } from "react-router-dom"
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons"
+import { useTranslation } from "react-i18next"
+import Logo from "@/assets/image/logo.png"
 
 import type { MenuProps } from "antd"
 import type { ReactNode } from "react"
@@ -18,100 +21,79 @@ interface MenuType {
 
 type MenuItem = Required<MenuProps>["items"][number]
 
-const items: MenuItem[] = [
-  {
-    key: "sub1",
-    label: "Navigation One",
-    icon: <MailOutlined />,
-    children: [
-      {
-        key: "g1",
-        label: "Item 1",
-        type: "group",
-        children: [
-          { key: "1", label: "Option 1" },
-          { key: "2", label: "Option 2" },
-        ],
-      },
-      {
-        key: "g2",
-        label: "Item 2",
-        type: "group",
-        children: [
-          { key: "3", label: "Option 3" },
-          { key: "4", label: "Option 4" },
-        ],
-      },
-    ],
-  },
-  {
-    key: "sub2",
-    label: "Navigation Two",
-    icon: <AppstoreOutlined />,
-    children: [
-      { key: "5", label: "Option 5" },
-      { key: "6", label: "Option 6" },
-      {
-        key: "sub3",
-        label: "Submenu",
-        children: [
-          { key: "7", label: "Option 7" },
-          { key: "8", label: "Option 8" },
-        ],
-      },
-    ],
-  },
-  {
-    type: "divider",
-  },
-  {
-    key: "sub4",
-    label: "Navigation Three",
-    icon: <SettingOutlined />,
-    children: [
-      { key: "9", label: "Option 9" },
-      { key: "10", label: "Option 10" },
-      { key: "11", label: "Option 11" },
-      { key: "12", label: "Option 12" },
-    ],
-  },
-  {
-    key: "grp",
-    label: "Group",
-    type: "group",
-    children: [
-      { key: "13", label: "Option 13" },
-      { key: "14", label: "Option 14" },
-    ],
-  },
-]
-
 const Menu: React.FC<MenuType> = memo((props) => {
+  const { t } = useTranslation()
+
   const { userInfo } = useSelector((state: RootState) => state.user, shallowEqual)
   const getMenuItem = useMemo(() => {
-    // console.log(props.routes)
-    if (Array.isArray(props.routes)) {
-      getMenuToRoutes(props.routes, userInfo.permissions)
+    if (Array.isArray(props.routes) && userInfo?.permissions && userInfo.permissions?.length) {
+      return getMenuToRoutes(props.routes, userInfo.permissions) as unknown as MenuItem[]
     } else {
       return []
     }
-    return []
-  }, [props.routes, userInfo.rules])
+  }, [props.routes, userInfo.permissions])
 
-  const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e)
+  const pathName = useLocation().pathname
+
+  const navigate = useNavigate()
+  const onClick: MenuProps["onClick"] = (item) => {
+    navigate(item.key)
   }
+
+  const [menuWidthHeight, setMenuWidthHeight] = useState<{ width: number | string; height: number | string }>({
+    width: 220,
+    height: "100vw",
+  })
+  useEffect(() => {
+    setMenuWidthHeight({
+      width: 220,
+      height: "calc(100vh - 100px)",
+    })
+  }, [setMenuWidthHeight])
+
+  const [isFoundMenu, setIsFoundMenu] = useState(localStorage.getItem("isFoundMenu") === "true")
+  const handleChangeFoldMenuClick = useCallback(
+    (flag: boolean) => {
+      setIsFoundMenu(flag)
+      localStorage.setItem("isFoundMenu", String(flag))
+    },
+    [setIsFoundMenu]
+  )
+
+  useEffect(() => {
+    if (isFoundMenu) {
+      setMenuWidthHeight({
+        width: 60,
+        height: "calc(100vh - 100px)",
+      })
+    } else {
+      setMenuWidthHeight({
+        width: 220,
+        height: "calc(100vh - 100px)",
+      })
+    }
+  }, [isFoundMenu, setMenuWidthHeight])
 
   return (
     <MenuStyled>
+      <div className="title menu-border-line" style={{ width: menuWidthHeight.width }}>
+        <img className="logo" src={Logo} alt="" />
+        <div className="title-content">{t("user.title")}</div>
+      </div>
       <AntdMenu
         onClick={onClick}
-        style={{ width: 210, height: "100vh" }}
-        defaultSelectedKeys={["1"]}
-        defaultOpenKeys={["sub1"]}
+        style={{ width: menuWidthHeight.width, height: menuWidthHeight.height }}
         mode="inline"
-        items={items}
+        items={getMenuItem}
+        defaultOpenKeys={["/" + pathName.split("/")[1]]}
+        defaultSelectedKeys={[pathName]}
+        inlineCollapsed={isFoundMenu}
       />
+      <div className="fold menu-border-line" style={{ width: menuWidthHeight.width }}>
+        <div className="icon" onClick={() => handleChangeFoldMenuClick(!isFoundMenu)}>
+          {isFoundMenu ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+        </div>
+      </div>
     </MenuStyled>
   )
 })

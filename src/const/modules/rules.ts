@@ -1,5 +1,5 @@
 export enum rules {
-  SYSTEM = 'system-manage',
-  SYSTEM_SETTING = 'system-manage-systemSetting',
-  SYSTEM_USERINFO = 'system-manage-userInfo',
+  SYSTEM = "app_btn_ag_geAcSetting",
+  SYSTEM_SETTING = "app_btn_ag_geFunctionSetting",
+  SYSTEM_USERINFO = "app_btn_ag_geGeSetting",
 }
