@@ -36,6 +36,7 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
     setLang(value)
     localStorage.setItem("lang", value)
     i18n.changeLanguage(value)
+    window.location.reload()
     setOpen(false)
   }
   return (

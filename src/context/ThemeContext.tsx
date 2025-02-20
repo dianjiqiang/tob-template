@@ -70,7 +70,6 @@ const ThemeProvider: React.FC<ThemeProviderProps> = memo((props) => {
   html.classList.remove("dark")
   html.classList.remove("light")
   html.classList.add(themeState)
-  console.log(getBodyStyle({ ...valueData }))
 
   html.style = getBodyStyle({ ...valueData })
 

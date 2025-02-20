@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client"
 import "assets/css/reset.less"
 import "assets/css/common.less"
 import ThemeProvider from "context/ThemeContext"
-import { HashRouter } from "react-router-dom"
+import { BrowserRouter } from "react-router-dom"
 import { Provider } from "react-redux"
 import store from "@/store"
 import App from "@/App.tsx"
@@ -12,9 +12,9 @@ createRoot(document.getElementById("root")!).render(
   // <StrictMode>
   <Provider store={store}>
     <ThemeProvider>
-      <HashRouter>
+      <BrowserRouter>
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   </Provider>
   // </StrictMode>

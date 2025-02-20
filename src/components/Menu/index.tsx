@@ -74,6 +74,21 @@ const Menu: React.FC<MenuType> = memo((props) => {
     }
   }, [isFoundMenu, setMenuWidthHeight])
 
+  const defaultOpenKeys = useMemo(() => {
+    if (isFoundMenu) {
+      return []
+    }
+    const totalArr = pathName.split("/")
+    totalArr.pop()
+    const resultArr: string[] = []
+    while (totalArr?.length > 1) {
+      resultArr.push(totalArr.join("/"))
+      totalArr.pop()
+    }
+
+    return resultArr
+  }, [pathName])
+
   return (
     <MenuStyled>
       <div className="title menu-border-line" style={{ width: menuWidthHeight.width }}>
@@ -85,7 +100,7 @@ const Menu: React.FC<MenuType> = memo((props) => {
         style={{ width: menuWidthHeight.width, height: menuWidthHeight.height }}
         mode="inline"
         items={getMenuItem}
-        defaultOpenKeys={["/" + pathName.split("/")[1]]}
+        defaultOpenKeys={defaultOpenKeys}
         defaultSelectedKeys={[pathName]}
         inlineCollapsed={isFoundMenu}
       />

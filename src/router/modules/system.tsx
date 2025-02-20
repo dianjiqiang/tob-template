@@ -1,5 +1,5 @@
 import { SettingOutlined } from "@ant-design/icons"
-import { Outlet } from "react-router-dom"
+import { Outlet, Navigate } from "react-router-dom"
 import { lazy } from "react"
 import i18next from "i18next"
 import { rules } from "@/const"
@@ -17,6 +17,11 @@ const routes: routesType = {
   rules: [rules.SYSTEM, rules.SYSTEM_USERINFO, rules.SYSTEM_SETTING],
   no: 999,
   children: [
+    {
+      path: "",
+      element: <Navigate to="user-info" replace />,
+      hiddenMenu: true,
+    },
     {
       path: "/system/user-info",
       name: "UserInfo",

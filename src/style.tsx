@@ -8,5 +8,9 @@ export const AppStyled = styled.div`
       /* width: 220px; */
       height: 100vh;
     }
+
+    .app-right {
+      flex: 1;
+    }
   }
 `

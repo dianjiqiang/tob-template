@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux"
 import type { routesType } from "./router/type"
 
 import Menu from "./components/Menu"
+import Header from "./components/Header"
 
 import { AppStyled } from "./style"
 import eventBus from "@/utils/eventbus"
@@ -60,6 +61,7 @@ const App = memo(() => {
               <Menu routes={routes}></Menu>
             </div>
             <div className="app-right">
+              <Header></Header>
               <Suspense fallback="">
                 <div className="main">{renderedRoutes}</div>
               </Suspense>
