@@ -3,9 +3,10 @@ import type { ReactNode } from "react"
 import { LoginFormStyled } from "./style"
 import { apiPostLogin } from "@/api/user"
 import { useDispatch } from "react-redux"
-import { setToken } from "@/store/modules/user"
+import { useNavigate } from "react-router-dom"
+import { setToken, asyncGetUserInfo, setUserInfo } from "@/store/modules/user"
 
-import { Button, Checkbox, Form, Input, Card } from "antd"
+import { Button, Checkbox, Form, Input, Card, message } from "antd"
 import { useTranslation } from "react-i18next"
 
 interface LoginFormType {
@@ -23,6 +24,7 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
   const dispatch = useDispatch()
 
   const [form] = Form.useForm()
+  const navigate = useNavigate()
 
   const handleSubmitClick = () => {
     form
@@ -39,6 +41,14 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
           localStorage.setItem("username", values.username)
           localStorage.removeItem("username")
         }
+        dispatch(asyncGetUserInfo({}) as any)
+          .then((res: any) => {
+            dispatch(setUserInfo(res.payload))
+            navigate("/analytics")
+          })
+          .catch(() => {
+            message.error("获取用户信息失败")
+          })
       })
       .catch((error) => {
         console.error("表单校验失败", error)

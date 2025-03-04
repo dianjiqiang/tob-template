@@ -13,8 +13,8 @@ export const getBodyStyle = (theme: ThemeDataType) => {
       --text-2: ${theme["text-2"]};
       --text-3: ${theme["text-3"]};
       --hover-background: ${theme["hover-background"]};
-      --active-background: ${theme["active-background"]}";
-      --active-hover-background: ${theme["active-hover-background"]}";
-      --menu-border-line: ${theme["menu-border-line"]}
+      --active-background: ${theme["active-background"]};
+      --active-hover-background: ${theme["active-hover-background"]};
+      --menu-border-line: ${theme["menu-border-line"]};
     `
 }

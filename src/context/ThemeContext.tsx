@@ -2,6 +2,7 @@
 import React, { memo, useState, useMemo } from "react"
 import type { ReactNode } from "react"
 import { ConfigProvider, theme } from "antd"
+// import GlobalStyle from "./themeGlobalStyled"
 import { getBodyStyle } from "assets/theme"
 
 export type ThemeType = {
@@ -26,7 +27,7 @@ export const basicThemeData: ThemeDataType = {
   "disabled-color": "rgba(0, 0, 0, 0.25)",
   "primary-color": "#1677FF",
   "success-color": "#52C41A",
-  "danger-color": "#FF4D4F", // 修正拼写错误
+  "danger-color": "#FF4D4F",
   "error-color": "#FF4D4F",
 }
 
@@ -44,7 +45,7 @@ const basicDarkThemeData = {
   "disabled-color": "rgba(255, 255, 255, 0.25)",
   "primary-color": "#1677FF",
   "success-color": "#52C41A",
-  "danger-color": "#FF4D4F", // 修正拼写错误
+  "danger-color": "#FF4D4F",
   "error-color": "#FF4D4F",
 }
 
@@ -66,15 +67,14 @@ const ThemeProvider: React.FC<ThemeProviderProps> = memo((props) => {
     return themeState
   }, [themeState])
 
-  const html: any = document.documentElement
+  const html: HTMLElement = document.documentElement
   html.classList.remove("dark")
   html.classList.remove("light")
   html.classList.add(themeState)
-
-  html.style = getBodyStyle({ ...valueData })
-
+  html.style.cssText = getBodyStyle({ ...valueData })
   return (
     <ThemeContext.Provider value={{ ...valueData, setThemeState }}>
+      {/* <GlobalStyle /> */}
       <ConfigProvider theme={{ algorithm: themeStateMemo === "dark" ? theme.darkAlgorithm : undefined }}>
         {props.children}
       </ConfigProvider>

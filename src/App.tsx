@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState, memo } from "react"
-import { useRoutes, useLocation } from "react-router-dom"
-import { Spin } from "antd"
+import { useRoutes, useLocation, useNavigate } from "react-router-dom"
+import { Spin, message } from "antd"
 import initialRoutes, { excludeRoutes } from "router/index"
 import { asyncGetUserInfo, setUserInfo } from "./store/modules/user"
 import { useDispatch } from "react-redux"
@@ -25,6 +25,7 @@ const App = memo(() => {
   const dispatch = useDispatch<any>()
 
   const location = useLocation()
+  const navigate = useNavigate()
   const renderedRoutes = useRoutes(routes)
 
   useEffect(() => {
@@ -37,14 +38,20 @@ const App = memo(() => {
   }, [])
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      dispatch(asyncGetUserInfo({}))
-        .then((res: any) => {
-          dispatch(setUserInfo(res.payload))
-        })
-        .catch((error: any) => {
-          console.error("Failed to fetch user info:", error)
-        })
+    if (location.pathname !== "/login") {
+      if (localStorage.getItem("token")) {
+        dispatch(asyncGetUserInfo({}))
+          .then((res: any) => {
+            dispatch(setUserInfo(res.payload))
+          })
+          .catch(() => {
+            // error: any
+            message.error("登录信息已过期, 请重新登录")
+            navigate("/login")
+          })
+      } else {
+        navigate("/login")
+      }
     }
   }, [dispatch])
 
@@ -61,7 +68,7 @@ const App = memo(() => {
               <Menu routes={routes}></Menu>
             </div>
             <div className="app-right">
-              <Header></Header>
+              <Header routes={routes}></Header>
               <Suspense fallback="">
                 <div className="main">{renderedRoutes}</div>
               </Suspense>

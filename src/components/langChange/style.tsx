@@ -12,14 +12,14 @@ export const LangChangeStyled = styled.div<ThemeDataType>`
       padding: 5px 20px !important;
       margin: 5px 0 0 0 !important;
       &:hover {
-        background-color: ${(props) => props["hover-background"]} !important;
+        background-color: var(--hover-background) !important;
       }
     }
     .popover-item-active {
-      color: ${(props) => props["primary-color"]} !important;
-      background-color: ${(props) => props["active-background"]} !important;
+      color: var(--primary-color) !important;
+      background-color: var(--active-background) !important;
       &:hover {
-        background-color: ${(props) => props["active-hover-background"]} !important;
+        background-color: var(--active-hover-background) !important;
       }
     }
   }

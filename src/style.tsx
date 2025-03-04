@@ -10,7 +10,8 @@ export const AppStyled = styled.div`
     }
 
     .app-right {
-      flex: 1;
+      width: 100%;
+      overflow-y: hidden;
     }
   }
 `

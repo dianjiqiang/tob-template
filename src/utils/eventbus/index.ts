@@ -15,7 +15,7 @@ class EventBus {
     }
   }
   emit(eventName: string, ...args: any[]) {
-    let result: any[] | null = this.event[eventName].length > 1 ? [] : null
+    let result: any[] | null = this.event[eventName]?.length > 1 ? [] : null
     if (this.event[eventName]) {
       this.event[eventName].forEach((item) => {
         const res = item(...args)

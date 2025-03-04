@@ -13,7 +13,7 @@ const Login = lazy(() => import("views/base-view/login"))
 export const initialRoutes = [
   {
     path: "/",
-    element: <Navigate to="/about" />,
+    element: <Navigate to="/analytics" />,
     hiddenMenu: true,
   },
   {

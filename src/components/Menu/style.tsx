@@ -32,15 +32,23 @@ export const MenuStyled = styled.div`
       height: 40px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       box-sizing: border-box;
       padding: 0 16px;
       font-size: 24px;
 
-      .icon {
-        transition: color 0.2s ease-in-out;
-        &:hover {
-          color: var(--primary-color);
-        }
+      .fastening,
+      .folder-menu {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .is-fastening {
+        color: var(--primary-color);
+        /* background-color: var(--active-hover-background); */
       }
     }
   }

@@ -4,15 +4,17 @@ import { HeaderStyled } from "./style"
 
 import HeaderLeft from "./c-cpns/header-left/HeaderLeft"
 import HeaderRight from "./c-cpns/header-right/HeaderRight"
+import { routesType } from "@/router/type"
 
 interface HeaderType {
   children?: ReactNode
+  routes: routesType[]
 }
 
-const Header: React.FC<HeaderType> = memo(() => {
+const Header: React.FC<HeaderType> = memo((props) => {
   return (
     <HeaderStyled className="bg-white">
-      <HeaderLeft />
+      <HeaderLeft routes={props.routes} />
       <HeaderRight />
     </HeaderStyled>
   )
