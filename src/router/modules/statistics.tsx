@@ -19,7 +19,7 @@ const routes: routesType = {
   children: [
     {
       path: "",
-      element: <Navigate to="/statistics" replace />,
+      element: <Navigate to="statistics" replace />,
       hiddenMenu: true,
     },
     {

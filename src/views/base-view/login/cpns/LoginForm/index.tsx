@@ -44,7 +44,7 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
         dispatch(asyncGetUserInfo({}) as any)
           .then((res: any) => {
             dispatch(setUserInfo(res.payload))
-            navigate("/analytics")
+            navigate("/analytics/statistics")
           })
           .catch(() => {
             message.error("获取用户信息失败")
