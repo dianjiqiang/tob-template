@@ -18,3 +18,6 @@ export const getBodyStyle = (theme: ThemeDataType) => {
       --menu-border-line: ${theme["menu-border-line"]};
     `
 }
+
+// 导出ECharts主题相关
+export { createEchartsDarkTheme, themeColors } from "./echartsTheme"

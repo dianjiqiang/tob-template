@@ -1,4 +1,5 @@
 import { routesType } from "@/router/type"
+
 export const getMenuToRoutes = (routes: routesType[], rules: string[]): routesType[] => {
   const processRoutes = (routes: any[]): any[] => {
     return (

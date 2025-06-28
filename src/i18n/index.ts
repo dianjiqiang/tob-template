@@ -50,6 +50,21 @@ Object.keys(modules).forEach(async (file) => {
   i18nInitResources[modulePath[2]] = merge(i18nInitResources[modulePath[2]], langData)
 })
 
+// 语言代码到 HTML lang 属性的映射
+const langToHtmlLang: Record<string, string> = {
+  zh: "zh-CN",
+  en: "en",
+  jp: "ja",
+}
+
+// 更新 HTML lang 属性的函数
+const updateHtmlLang = (lang: string) => {
+  const htmlElement = document.documentElement
+  if (htmlElement) {
+    htmlElement.lang = langToHtmlLang[lang] || lang
+  }
+}
+
 i18n.use(initReactI18next).init({
   resources: i18nInitResources,
   lng: "zh",
@@ -57,6 +72,15 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
+})
+
+// 初始化时设置 HTML lang 属性
+const initialLang = localStorage.getItem("lang") || "zh"
+updateHtmlLang(initialLang)
+
+// 监听语言变化事件
+i18n.on("languageChanged", (lng) => {
+  updateHtmlLang(lng)
 })
 
 export default i18n

@@ -19,7 +19,7 @@ export const initialRoutes = [
   {
     path: "/about",
     name: "About",
-    label: "关于",
+    label: "route.about",
     icon: <CopyrightOutlined />,
     element: <About></About>,
     no: 9999,
@@ -27,21 +27,21 @@ export const initialRoutes = [
   {
     path: "/login",
     name: "Login",
-    label: "登录",
+    label: "route.login",
     element: <Login></Login>,
     hiddenMenu: true,
   },
   {
     path: "/500",
     name: "500",
-    label: "500",
+    label: "route.error500",
     element: <LinkError></LinkError>,
     hiddenMenu: true,
   },
   {
     path: "/503",
     name: "503",
-    label: "503",
+    label: "route.error503",
     element: <RedirectError></RedirectError>,
     hiddenMenu: true,
   },

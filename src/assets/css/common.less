@@ -16,9 +16,15 @@
 .text-3 {
   color: var(--text-3);
 }
+.menu-border-line {
+  transition-behavior: normal;
+  transition-delay: 0s;
+  transition-duration: 0.3s;
+  transition-property: width;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
 .light {
   .menu-border-line {
-    transition: 0.2s ease-in-out width;
     border-inline-end: 1px solid #f0f0f0;
   }
   .bg-white {
@@ -27,7 +33,6 @@
 }
 .dark {
   .menu-border-line {
-    transition: 0.2s ease-in-out width;
     border-inline-end: 1px solid #313131;
     background-color: #141414;
   }
@@ -42,7 +47,7 @@
 }
 
 .icon {
-  transition: color 0.2s ease-in-out;
+  transition: color 0.2s linear;
   &:hover {
     color: var(--primary-color);
   }

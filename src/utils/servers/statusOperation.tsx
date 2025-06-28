@@ -3,6 +3,7 @@ import { statusCode } from "@/const/modules/statusCode"
 import { message as messageApi, Modal, notification } from "antd"
 import { CloseCircleOutlined } from "@ant-design/icons"
 import { basicThemeData } from "@/context/ThemeContext"
+import i18next from "i18next"
 
 const { confirm } = Modal
 
@@ -14,31 +15,31 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
   if (useMessage === "message") {
     switch (status) {
       case statusCode.ERROR:
-        messageApi.error(message ?? "服务器错误, 请稍后重试")
+        messageApi.error(message ?? i18next.t("error.serverErrorDesc"))
         break
       case statusCode.FORBIDDEN:
-        messageApi.error(message ?? "权限不足, 请联系管理员")
+        messageApi.error(message ?? i18next.t("error.permissionDeniedDesc"))
         break
       case statusCode.UNAUTHORIZED:
-        messageApi.error(message ?? "未登录, 请重新登录")
+        messageApi.error(message ?? i18next.t("error.notLoggedInDesc"))
         break
       case statusCode.NOT_FOUND:
-        messageApi.error(message ?? "请求地址错误, 请检查地址是否正确")
+        messageApi.error(message ?? i18next.t("error.requestUrlErrorDesc"))
         break
       case statusCode.METHOD_NOT_ALLOWED:
-        messageApi.error(message ?? "请求方法错误, 请检查请求方法是否正确")
+        messageApi.error(message ?? i18next.t("error.requestMethodErrorDesc"))
         break
       case statusCode.BAD_GATEWAY:
-        messageApi.error(message ?? "网关错误, 请稍后重试")
+        messageApi.error(message ?? i18next.t("error.gatewayErrorDesc"))
         break
       case statusCode.NOT_IMPLEMENTED:
-        messageApi.error(message ?? "服务未实现, 请稍后重试")
+        messageApi.error(message ?? i18next.t("error.serviceNotImplementedDesc"))
         break
       case statusCode.REQUEST_TIMEOUT:
-        messageApi.error(message ?? "请求超时, 请稍后重试")
+        messageApi.error(message ?? i18next.t("error.requestTimeoutDesc"))
         break
       default:
-        messageApi.error(message ?? "系统异常, 请稍后重试")
+        messageApi.error(message ?? i18next.t("error.systemExceptionDesc"))
         break
     }
   }
@@ -46,74 +47,74 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
     switch (status) {
       case statusCode.ERROR:
         confirm({
-          title: "服务器错误",
-          content: message ?? "服务器错误, 请稍后重试",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.serverError"),
+          content: message ?? i18next.t("error.serverErrorDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.FORBIDDEN:
         confirm({
-          title: "权限不足",
-          content: message ?? "权限不足, 请联系管理员",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.permissionDenied"),
+          content: message ?? i18next.t("error.permissionDeniedDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.UNAUTHORIZED:
         confirm({
-          title: "未登录",
-          content: message ?? "未登录, 请重新登录",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.notLoggedIn"),
+          content: message ?? i18next.t("error.notLoggedInDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.NOT_FOUND:
         confirm({
-          title: "请求地址错误",
-          content: message ?? "请求地址错误, 请检查地址是否正确",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.requestUrlError"),
+          content: message ?? i18next.t("error.requestUrlErrorDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.METHOD_NOT_ALLOWED:
         confirm({
-          title: "请求方法错误",
-          content: message ?? "请求方法错误, 请检查请求方法是否正确",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.requestMethodError"),
+          content: message ?? i18next.t("error.requestMethodErrorDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.BAD_GATEWAY:
         confirm({
-          title: "网关错误",
-          content: message ?? "网关错误, 请稍后重试",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.gatewayError"),
+          content: message ?? i18next.t("error.gatewayErrorDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.NOT_IMPLEMENTED:
         confirm({
-          title: "服务未实现",
-          content: message ?? "服务未实现, 请稍后重试",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.serviceNotImplemented"),
+          content: message ?? i18next.t("error.serviceNotImplementedDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       case statusCode.REQUEST_TIMEOUT:
         confirm({
-          title: "请求超时",
-          content: message ?? "请求超时, 请稍后重试",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.requestTimeout"),
+          content: message ?? i18next.t("error.requestTimeoutDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
       default:
         confirm({
-          title: "系统异常",
-          content: message ?? "系统异常, 请稍后重试",
-          okText: "确定",
-          cancelText: "取消",
+          title: i18next.t("error.systemException"),
+          content: message ?? i18next.t("error.systemExceptionDesc"),
+          okText: i18next.t("error.confirm"),
+          cancelText: i18next.t("error.cancel"),
         })
         break
     }
@@ -122,72 +123,72 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
     switch (status) {
       case statusCode.ERROR:
         notification.open({
-          message: "服务器错误",
-          description: message ?? "服务器错误, 请稍后重试",
+          message: i18next.t("error.serverError"),
+          description: message ?? i18next.t("error.serverErrorDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.FORBIDDEN:
         notification.open({
-          message: "权限不足",
-          description: message ?? "权限不足, 请联系管理员",
+          message: i18next.t("error.permissionDenied"),
+          description: message ?? i18next.t("error.permissionDeniedDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.UNAUTHORIZED:
         notification.open({
-          message: "未登录",
-          description: message ?? "未登录, 请重新登录",
+          message: i18next.t("error.notLoggedIn"),
+          description: message ?? i18next.t("error.notLoggedInDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.NOT_FOUND:
         notification.open({
-          message: "请求地址错误",
-          description: message ?? "请求地址错误, 请检查地址是否正确",
+          message: i18next.t("error.requestUrlError"),
+          description: message ?? i18next.t("error.requestUrlErrorDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.METHOD_NOT_ALLOWED:
         notification.open({
-          message: "请求方法错误",
-          description: message ?? "请求方法错误, 请检查请求方法是否正确",
+          message: i18next.t("error.requestMethodError"),
+          description: message ?? i18next.t("error.requestMethodErrorDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.BAD_GATEWAY:
         notification.open({
-          message: "网关错误",
-          description: message ?? "网关错误, 请稍后重试",
+          message: i18next.t("error.gatewayError"),
+          description: message ?? i18next.t("error.gatewayErrorDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.NOT_IMPLEMENTED:
         notification.open({
-          message: "服务未实现",
-          description: message ?? "服务未实现, 请稍后重试",
+          message: i18next.t("error.serviceNotImplemented"),
+          description: message ?? i18next.t("error.serviceNotImplementedDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       case statusCode.REQUEST_TIMEOUT:
         notification.open({
-          message: "请求超时",
-          description: message ?? "请求超时, 请稍后重试",
+          message: i18next.t("error.requestTimeout"),
+          description: message ?? i18next.t("error.requestTimeoutDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })
         break
       default:
         notification.open({
-          message: "系统异常",
-          description: message ?? "系统异常, 请稍后重试",
+          message: i18next.t("error.systemException"),
+          description: message ?? i18next.t("error.systemExceptionDesc"),
           duration: 0,
           closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
         })

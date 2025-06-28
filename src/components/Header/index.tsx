@@ -9,11 +9,12 @@ import { routesType } from "@/router/type"
 interface HeaderType {
   children?: ReactNode
   routes: routesType[]
+  style?: React.CSSProperties
 }
 
 const Header: React.FC<HeaderType> = memo((props) => {
   return (
-    <HeaderStyled className="bg-white">
+    <HeaderStyled className="bg-white" style={props.style}>
       <HeaderLeft routes={props.routes} />
       <HeaderRight />
     </HeaderStyled>

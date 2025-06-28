@@ -1,73 +1,224 @@
-import React, { memo, useRef, useEffect, useState } from "react"
-import { debounce } from "lodash-es"
-import type { ReactNode } from "react"
+import React, { memo, useRef, useEffect, useCallback, useContext } from "react"
 import * as echarts from "echarts"
-import type { EChartsOption, ECharts } from "echarts"
+import type { EChartsOption } from "echarts"
+import { ThemeContext } from "@/context/ThemeContext"
+import { createEchartsDarkTheme } from "@/assets/theme/echartsTheme"
 import { EchartsStyled } from "./style"
 
-interface EchartsType {
-  children?: ReactNode
-  width?: string
-  height?: string
-  options?: EChartsOption
+interface EchartsProps {
+  options: EChartsOption
+  className?: string
+  style?: React.CSSProperties
+  width?: string | number
+  height?: string | number
 }
 
-const resizeFn = (charts: ECharts | undefined) => {
-  if (charts) {
-    charts.resize()
+const Echarts: React.FC<EchartsProps> = memo((props) => {
+  const { options, className, style, width = "100%", height = 300 } = props
+  const theme = useContext(ThemeContext)
+  const isDark = theme.theme === "dark"
+  const chartRef = useRef<HTMLDivElement>(null)
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null)
+  const resizeObserverRef = useRef<ResizeObserver | null>(null)
+  const isInitializedRef = useRef(false)
+
+  // 处理宽高值
+  const getWidth = () => {
+    if (typeof width === "number") {
+      return `${width}px`
+    }
+    return width
   }
-}
 
-const resizeFnDebounce = debounce(resizeFn, 300, { leading: false, trailing: true })
-
-const Echarts: React.FC<EchartsType> = memo((props) => {
-  const [currentInstance, setCurrentInstance] = useState<ECharts>()
-  const [isOnce, setIsOnce] = useState<boolean>(true)
-  const echartsRef = useRef<HTMLDivElement | null>(null)
-
-  // init
-  useEffect(() => {
-    const echartsInstance = echarts.init(echartsRef.current)
-    if (!currentInstance) {
-      setCurrentInstance(echartsInstance)
+  const getHeight = () => {
+    if (typeof height === "number") {
+      return `${height}px`
     }
-    if (echartsRef.current && props.options) {
-      echartsInstance.setOption(props.options)
-    }
-  }, [echartsRef])
+    return height
+  }
 
-  // runtime
-  useEffect(() => {
-    if (currentInstance && props.options) {
-      currentInstance.setOption(props.options)
-    }
-  }, [props.options, currentInstance])
+  // 检查容器尺寸是否可用
+  const checkContainerSize = useCallback(() => {
+    if (!chartRef.current) return false
+    const { clientWidth, clientHeight } = chartRef.current
+    return clientWidth > 0 && clientHeight > 0
+  }, [])
 
-  // resize
-  useEffect(() => {
-    if (currentInstance) {
-      currentInstance.resize()
-    }
-  }, [props.width, props.height])
+  // 初始化图表
+  const initChart = useCallback(() => {
+    if (!chartRef.current || !checkContainerSize() || isInitializedRef.current) return
 
+    try {
+      // 销毁之前的实例
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.dispose()
+      }
+
+      // 注册主题
+      if (isDark) {
+        const customDarkTheme = createEchartsDarkTheme(theme)
+        echarts.registerTheme("custom-dark", customDarkTheme)
+      }
+
+      // 创建新实例
+      const themeName = isDark ? "custom-dark" : undefined
+      const chart = echarts.init(chartRef.current, themeName)
+      chartInstanceRef.current = chart
+
+      // 设置配置
+      chart.setOption(options, true)
+      isInitializedRef.current = true
+
+      return chart
+    } catch (error) {
+      console.error("ECharts initialization error:", error)
+    }
+  }, [isDark, theme, checkContainerSize, options])
+
+  // 延迟初始化
+  const delayedInit = useCallback(() => {
+    if (isInitializedRef.current) return
+
+    const timer = setTimeout(() => {
+      if (checkContainerSize()) {
+        initChart()
+      } else {
+        delayedInit()
+      }
+    }, 50)
+
+    return () => clearTimeout(timer)
+  }, [checkContainerSize, initChart])
+
+  // 监听尺寸变化
   useEffect(() => {
-    if (currentInstance) {
-      const resizeObserver = new ResizeObserver(() => {
-        if (isOnce) {
-          setTimeout(() => {
-            setIsOnce(false)
-          }, 3000)
-          return
+    if (!chartRef.current) return
+
+    let resizeTimer: NodeJS.Timeout | null = null
+    let lastResizeTime = 0
+
+    const handleResize = () => {
+      if (chartInstanceRef.current && isInitializedRef.current) {
+        try {
+          chartInstanceRef.current.resize()
+        } catch (error) {
+          console.error("ECharts resize error:", error)
         }
-        resizeFnDebounce(currentInstance)
-      })
-      resizeObserver.observe(echartsRef.current as Element)
+      }
     }
-  }, [currentInstance, isOnce])
+
+    const smartResize = () => {
+      const now = Date.now()
+
+      // 检查是否正在播放动画
+      const isAnimating = chartInstanceRef.current
+        ?.getZr()
+        ?.storage?.getDisplayList()
+        ?.some((item: any) => item.animeId !== undefined)
+
+      // 如果正在播放动画，延迟resize
+      if (isAnimating) {
+        if (resizeTimer) {
+          clearTimeout(resizeTimer)
+        }
+        resizeTimer = setTimeout(() => {
+          handleResize()
+          lastResizeTime = Date.now()
+        }, 1000) // 等待动画完成
+        return
+      }
+
+      // 如果距离上次resize时间很短，使用防抖
+      if (now - lastResizeTime < 200) {
+        if (resizeTimer) {
+          clearTimeout(resizeTimer)
+        }
+        resizeTimer = setTimeout(() => {
+          handleResize()
+          lastResizeTime = Date.now()
+        }, 100)
+      } else {
+        // 如果间隔较长，直接执行
+        handleResize()
+        lastResizeTime = now
+      }
+    }
+
+    // 创建ResizeObserver
+    resizeObserverRef.current = new ResizeObserver(smartResize)
+    resizeObserverRef.current.observe(chartRef.current)
+
+    return () => {
+      if (resizeTimer) {
+        clearTimeout(resizeTimer)
+      }
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect()
+      }
+    }
+  }, [])
+
+  // 组件挂载时初始化
+  useEffect(() => {
+    delayedInit()
+  }, [delayedInit])
+
+  // 监听主题变化
+  useEffect(() => {
+    if (isInitializedRef.current) {
+      // 重新初始化以应用新主题
+      isInitializedRef.current = false
+      initChart()
+    }
+  }, [isDark, initChart])
+
+  // 组件卸载时清理资源
+  useEffect(() => {
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.dispose()
+        chartInstanceRef.current = null
+      }
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect()
+        resizeObserverRef.current = null
+      }
+      isInitializedRef.current = false
+    }
+  }, [])
+
+  // 更新图表配置
+  const updateChart = useCallback((newOptions: EChartsOption) => {
+    if (!chartInstanceRef.current || !isInitializedRef.current) return
+
+    try {
+      chartInstanceRef.current.setOption(newOptions, true)
+    } catch (error) {
+      console.error("ECharts update error:", error)
+    }
+  }, [])
+
+  // 监听options变化 - 使用温和的防抖
+  useEffect(() => {
+    if (!options) return
+
+    const timer = setTimeout(() => {
+      updateChart(options)
+    }, 100) // 100ms的温和防抖
+
+    return () => clearTimeout(timer)
+  }, [options, updateChart])
+
   return (
-    <EchartsStyled width={props.width} height={props.height}>
-      <div className="my-charts-es" ref={echartsRef}></div>
-    </EchartsStyled>
+    <EchartsStyled
+      ref={chartRef}
+      className={className}
+      style={{
+        width: getWidth(),
+        height: getHeight(),
+        ...style,
+      }}
+    />
   )
 })
 

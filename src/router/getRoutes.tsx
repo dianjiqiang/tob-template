@@ -1,6 +1,7 @@
 import type { routesType } from "./type"
 import routes from "."
 import eventBus from "@/utils/eventbus"
+import { cloneDeep } from "lodash-es"
 
 interface ModuleType {
   default: Record<string, any>
@@ -30,7 +31,7 @@ const filterRoute = (routeObj: routesType, validRules: string[] | null): any => 
 }
 
 export const getRoutes = async (roles: string[]) => {
-  const initialRoutes = [...routes]
+  const initialRoutes = cloneDeep(routes)
   const routesModules = import.meta.glob<ModuleType>("./modules/**/*.tsx")
 
   const urlList = Object.keys(routesModules)

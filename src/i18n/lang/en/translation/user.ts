@@ -3,5 +3,8 @@ export default {
   password: "password",
   rememberMe: "rememberMe",
   login: "login",
-  title: "Ma shang chuang ke management system",
+  title: "Keyie Template",
+  userCenter: "User Center",
+  logout: "Logout",
+  success: "Success",
 }

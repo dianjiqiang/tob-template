@@ -8,11 +8,13 @@ import classnames from "classnames"
 import { MenuStyled } from "./style"
 import { setKeyPath } from "@/store/modules/system"
 import { getMenuToRoutes } from "@/utils/getMenuToRoutes"
+import eventBus from "@/utils/eventbus"
 
-import Fastening from "../SvgComponents/layout/menu/Fastening"
 import Shrink from "../SvgComponents/layout/menu/Shrink"
 import Unfold from "../SvgComponents/layout/menu/Unfold"
 import Logo from "@/assets/image/logo.png"
+
+import { style } from "@/const"
 
 import type { routesType } from "@/router/type"
 import type { RootState } from "@/store"
@@ -31,10 +33,36 @@ const Menu: React.FC<MenuType> = memo((props) => {
   const dispatch = useDispatch()
 
   const getMenuItem = useMemo(() => {
-    if (Array.isArray(props.routes) && userInfo?.permissions && userInfo.permissions?.length)
-      return getMenuToRoutes(props.routes, userInfo.permissions) as unknown as MenuItem[]
+    if (Array.isArray(props.routes)) {
+      // 如果有用户权限，使用权限过滤；如果没有权限，显示所有不需要权限的路由
+      const permissions = userInfo?.permissions || []
+
+      // 如果权限还没有加载完成，显示所有不需要权限的路由
+      const menuItems = getMenuToRoutes(props.routes, permissions) as unknown as MenuItem[]
+
+      // 处理i18n翻译
+      const translateMenuItems = (items: any[]): any[] => {
+        return items.map((item) => {
+          const translatedItem = { ...item }
+
+          // 如果label是i18n key，进行翻译
+          if (typeof translatedItem.label === "string" && translatedItem.label.includes(".")) {
+            translatedItem.label = t(translatedItem.label)
+          }
+
+          // 递归处理子菜单
+          if (translatedItem.children) {
+            translatedItem.children = translateMenuItems(translatedItem.children)
+          }
+
+          return translatedItem
+        })
+      }
+
+      return translateMenuItems(menuItems)
+    }
     return []
-  }, [props.routes, userInfo.permissions])
+  }, [props.routes, userInfo?.permissions, t])
 
   const pathName = useLocation().pathname
 
@@ -43,6 +71,8 @@ const Menu: React.FC<MenuType> = memo((props) => {
   const onSelect: MenuProps["onSelect"] = ({ key }) => {
     navigate(key)
   }
+
+  // 监听路径变化，更新选中的菜单项
   useEffect(() => {
     const totalArr = pathName.split("/")
     totalArr.pop()
@@ -54,41 +84,35 @@ const Menu: React.FC<MenuType> = memo((props) => {
     dispatch(setKeyPath([...resultArr, pathName]))
   }, [dispatch, pathName])
 
-  const [menuWidthHeight, setMenuWidthHeight] = useState<{ width: number | string; height: number | string }>({
-    width: "",
-    height: "",
-  })
-  useEffect(() => {
-    setMenuWidthHeight({
-      width: 220,
-      height: "calc(100vh - 100px)",
-    })
-  }, [setMenuWidthHeight])
-
   const [isFoundMenu, setIsFoundMenu] = useState(localStorage.getItem("isFoundMenu") === "true")
-  const [isFastening, setIsFastening] = useState(localStorage.getItem("isFastening") === "true")
+  const [menuWidth, setMenuWidth] = useState<number | string>(
+    isFoundMenu ? style.MENU_CLOSE_WIDTH : style.MEMU_OPEN_WIDTH
+  )
+
   const handleChangeFoldMenuClick = useCallback(
     (flag: boolean) => {
       setIsFoundMenu(flag)
       localStorage.setItem("isFoundMenu", String(flag))
+      // 触发事件通知App组件
+      eventBus.emit("menuToggle")
     },
     [setIsFoundMenu]
   )
 
   useEffect(() => {
     if (isFoundMenu) {
-      setMenuWidthHeight({
-        width: 60,
-        height: "calc(100vh - 100px)",
-      })
+      setMenuWidth(style.MENU_CLOSE_WIDTH)
     } else {
-      setMenuWidthHeight({
-        width: 220,
-        height: "calc(100vh - 100px)",
-      })
+      setMenuWidth(style.MEMU_OPEN_WIDTH)
     }
-  }, [isFoundMenu, setMenuWidthHeight])
+  }, [isFoundMenu, setMenuWidth])
 
+  // 计算当前选中的菜单项
+  const selectedKeys = useMemo(() => {
+    return [pathName]
+  }, [pathName])
+
+  // 计算默认展开的菜单项
   const defaultOpenKeys = useMemo(() => {
     if (isFoundMenu) {
       return []
@@ -103,63 +127,25 @@ const Menu: React.FC<MenuType> = memo((props) => {
     return resultArr
   }, [pathName, isFoundMenu])
 
-  const handleClickFastening = useCallback(() => {
-    setIsFastening(!isFastening)
-    localStorage.setItem("isFastening", String(!isFastening))
-    if (!isFastening) {
-      // 开启状态 1. 宽度变成 60 手放上去的时候宽度变成 220, 但是定位宽度需要改变成 60
-    }
-  }, [isFastening])
-
-  // const handleMouseEnter = useCallback(() => {
-  //   return
-  //   if (isFastening) {
-  //     if (menuWidthHeight.width === 60) {
-  //       setMenuWidthHeight({
-  //         width: 220,
-  //         height: "calc(100vh - 100px)",
-  //       })
-  //     }
-  //   }
-  // }, [isFastening, menuWidthHeight])
-  // const handleMouseLeave = useCallback(() => {
-  //   return
-  //   if (isFastening) {
-  //     if (menuWidthHeight.width === 220) {
-  //       setMenuWidthHeight({
-  //         width: 60,
-  //         height: "calc(100vh - 100px)",
-  //       })
-  //     }
-  //   }
-  // }, [isFastening, menuWidthHeight])
-
   return (
     <MenuStyled>
-      <div className="title menu-border-line" style={{ width: menuWidthHeight.width }}>
+      <div className="title menu-border-line" style={{ width: menuWidth }}>
         <img className="logo" src={Logo} alt="" />
         <div className="title-content">{t("user.title")}</div>
       </div>
-      {/* onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave} */}
       <AntdMenu
         onSelect={onSelect}
-        style={{ width: menuWidthHeight.width, height: menuWidthHeight.height }}
+        style={{ width: menuWidth, height: "calc(100vh - 100px)" }}
         mode="inline"
         items={getMenuItem}
         defaultOpenKeys={defaultOpenKeys}
-        defaultSelectedKeys={[pathName]}
+        selectedKeys={selectedKeys}
         inlineCollapsed={isFoundMenu}
       />
-      <div className="fold menu-border-line" style={{ width: menuWidthHeight.width }}>
+      <div className="fold menu-border-line" style={{ width: menuWidth }}>
         <div className={classnames("icon", "folder-menu")} onClick={() => handleChangeFoldMenuClick(!isFoundMenu)}>
           {isFoundMenu ? <Unfold style={{ fontSize: "16px" }} /> : <Shrink style={{ fontSize: "20px" }} />}
         </div>
-        {!isFoundMenu && (
-          <div className={classnames("icon", "fastening", { "is-fastening": isFastening })}>
-            <Fastening onClick={() => handleClickFastening()} style={{ fontSize: "16px" }} />
-          </div>
-        )}
       </div>
     </MenuStyled>
   )

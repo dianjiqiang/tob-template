@@ -14,8 +14,8 @@ interface LangChangeType {
 }
 
 const options = [
-  { label: "简体中文", value: "ch" },
-  { label: "english", value: "en" },
+  { label: "简体中文", value: "zh" },
+  { label: "English", value: "en" },
   { label: "日本語", value: "jp" },
 ]
 
@@ -31,7 +31,8 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
       i18n.changeLanguage(lang)
       setOpen(false)
     }
-  }, [i18n])
+  }, [i18n, lang])
+
   const handleChangeLang = (value: string) => {
     setLang(value)
     localStorage.setItem("lang", value)
@@ -39,6 +40,7 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
     window.location.reload()
     setOpen(false)
   }
+
   return (
     <LangChangeStyled setThemeState={undefined}>
       <div className="popover-wrapper">

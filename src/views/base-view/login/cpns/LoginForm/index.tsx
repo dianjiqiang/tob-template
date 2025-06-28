@@ -47,11 +47,11 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
             navigate("/analytics/statistics")
           })
           .catch(() => {
-            message.error("获取用户信息失败")
+            message.error(t("error.getUserInfoFailed"))
           })
       })
       .catch((error) => {
-        console.error("表单校验失败", error)
+        console.error(t("error.formValidationFailed"), error)
       })
   }
 
