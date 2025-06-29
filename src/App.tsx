@@ -82,30 +82,30 @@ const App = memo(() => {
 
   useEffect(() => {
     if (!isInitialized) {
-      if (!excludeRoutes.includes(location.pathname)) {
-        if (localStorage.getItem("token")) {
-          dispatch(asyncGetUserInfo({}))
-            .then((res: any) => {
-              dispatch(setUserInfo(res.payload))
-            })
-            .catch(() => {
+      const initializeApp = async () => {
+        const token = localStorage.getItem("token")
+        if (token) {
+          try {
+            const res = await dispatch(asyncGetUserInfo({}))
+            dispatch(setUserInfo(res.payload))
+          } catch {
+            if (!excludeRoutes.includes(location.pathname)) {
               message.error(t("error.notLoggedInDesc"))
               navigate("/login")
-            })
-            .finally(() => {
-              setIsInitialized(true)
-            })
+            }
+          }
         } else {
-          setIsInitialized(true)
-          navigate("/login")
+          if (!excludeRoutes.includes(location.pathname)) {
+            navigate("/login")
+          }
         }
-      } else {
-        // 如果是登录页等排除路由，直接初始化完成
+
         setIsInitialized(true)
       }
+
+      initializeApp()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, t, isInitialized])
+  }, [dispatch, t, isInitialized, location.pathname, navigate])
 
   // 当应用准备就绪时，触发Loading退出动画
   useEffect(() => {

@@ -1,6 +1,6 @@
-import axios from 'axios'
-import type { AxiosInstance } from 'axios'
-import type { KeyieRequestConfig,KeyieRequestConfigOption } from './type'
+import axios from "axios"
+import type { AxiosInstance } from "axios"
+import type { KeyieRequestConfig, KeyieRequestConfigOption } from "./type"
 
 export class KeyieRequest {
   instance: AxiosInstance
@@ -12,13 +12,16 @@ export class KeyieRequest {
     // 全局请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        // 给每个响应头加上token
-        config.headers.AccessToken = 'xxx'
+        // 从 localStorage 中获取 token
+        const token = localStorage.getItem("token")
+        if (token) {
+          config.headers.AccessToken = token
+        }
 
         return config
       },
       (err) => {
-        console.log('请求失败的拦截')
+        console.log("请求失败的拦截")
         return err
       }
     )
@@ -34,16 +37,10 @@ export class KeyieRequest {
 
     //添加局部拦截器
     if (config.interceptors?.onFulfilled || config.interceptors?.onRejected) {
-      this.instance.interceptors.request.use(
-        config.interceptors.onFulfilled as any,
-        config.interceptors.onRejected
-      )
+      this.instance.interceptors.request.use(config.interceptors.onFulfilled as any, config.interceptors.onRejected)
     }
     if (config.interceptors?.onFulfilledRes || config.interceptors?.onRejectedRes) {
-      this.instance.interceptors.response.use(
-        config.interceptors.onFulfilledRes,
-        config.interceptors.onRejectedRes
-      )
+      this.instance.interceptors.response.use(config.interceptors.onFulfilledRes, config.interceptors.onRejectedRes)
     }
   }
 
@@ -60,19 +57,19 @@ export class KeyieRequest {
     })
   }
   get<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
-    return this.request({ ...config, method: 'GET' }, options)
+    return this.request({ ...config, method: "GET" }, options)
   }
   put<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
-    return this.request({ ...config, method: 'PUT' }, options)
+    return this.request({ ...config, method: "PUT" }, options)
   }
   post<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
-    return this.request({ ...config, method: 'POST' }, options)
+    return this.request({ ...config, method: "POST" }, options)
   }
   delete<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
-    return this.request({ ...config, method: 'DELETE' }, options)
+    return this.request({ ...config, method: "DELETE" }, options)
   }
   patch<T = any>(config: KeyieRequestConfig<T>, options?: KeyieRequestConfigOption) {
-    return this.request({ ...config, method: 'PATCH' }, options)
+    return this.request({ ...config, method: "PATCH" }, options)
   }
 }
 
