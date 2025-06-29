@@ -20,7 +20,7 @@ interface LoginRecord {
 const LoginHistory: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState<LoginRecord[]>([])
-  const { t } = useTranslation("userInfo")
+  const { t } = useTranslation()
 
   // 模拟数据
   const mockData: LoginRecord[] = [
@@ -96,7 +96,7 @@ const LoginHistory: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       setDataSource(mockData)
     } catch {
-      message.error(t("fetchHistoryFailed"))
+      message.error(t("view.userInfo.fetchHistoryFailed"))
     } finally {
       setLoading(false)
     }
@@ -104,62 +104,62 @@ const LoginHistory: React.FC = () => {
 
   const columns: ProColumns<LoginRecord>[] = [
     {
-      title: t("loginTime"),
+      title: t("view.userInfo.loginTime"),
       dataIndex: "loginTime",
       key: "loginTime",
       width: 180,
       sorter: true,
     },
     {
-      title: t("logoutTime"),
+      title: t("view.userInfo.logoutTime"),
       dataIndex: "logoutTime",
       key: "logoutTime",
       width: 180,
       render: (_, record) => record.logoutTime || "-",
     },
     {
-      title: t("ipAddress"),
+      title: t("view.userInfo.ipAddress"),
       dataIndex: "ipAddress",
       key: "ipAddress",
       width: 140,
     },
     {
-      title: t("location"),
+      title: t("view.userInfo.location"),
       dataIndex: "location",
       key: "location",
       width: 120,
     },
     {
-      title: t("device"),
+      title: t("view.userInfo.device"),
       dataIndex: "device",
       key: "device",
       width: 100,
     },
     {
-      title: t("browser"),
+      title: t("view.userInfo.browser"),
       dataIndex: "browser",
       key: "browser",
       width: 150,
     },
     {
-      title: t("operatingSystem"),
+      title: t("view.userInfo.operatingSystem"),
       dataIndex: "os",
       key: "os",
       width: 150,
     },
     {
-      title: t("status"),
+      title: t("view.userInfo.status"),
       dataIndex: "status",
       key: "status",
       width: 100,
       render: (_, record) => (
         <Tag color={record.status === "success" ? "green" : "red"}>
-          {record.status === "success" ? t("success") : t("failed")}
+          {record.status === "success" ? t("view.userInfo.success") : t("view.userInfo.failed")}
         </Tag>
       ),
     },
     {
-      title: t("reason"),
+      title: t("view.userInfo.reason"),
       dataIndex: "reason",
       key: "reason",
       width: 150,
@@ -169,7 +169,7 @@ const LoginHistory: React.FC = () => {
 
   return (
     <LoginHistoryWrapper>
-      <Card title={t("loginHistoryTitle")}>
+      <Card title={t("view.userInfo.loginHistoryTitle")}>
         <ProTable<LoginRecord>
           columns={columns}
           dataSource={dataSource}
@@ -180,7 +180,10 @@ const LoginHistory: React.FC = () => {
             defaultPageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total, range) => `${t("showing")} ${range[0]}-${range[1]} ${t("of")} ${total} ${t("records")}`,
+            showTotal: (total, range) =>
+              `${t("view.userInfo.showing")} ${range[0]}-${range[1]} ${t("view.userInfo.of")} ${total} ${t(
+                "view.userInfo.records"
+              )}`,
           }}
           options={{
             reload: () => fetchLoginHistory(),

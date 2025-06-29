@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Tabs, Row, Col, message } from "antd"
+import { Tabs, Row, Col, message, Card } from "antd"
 import { UserOutlined, SafetyOutlined, HistoryOutlined } from "@ant-design/icons"
 import { useTranslation } from "react-i18next"
 import UserAvatar from "./components/UserAvatar"
@@ -10,36 +10,36 @@ import { UserInfoWrapper } from "./style.tsx"
 
 const UserInfo: React.FC = () => {
   const [activeKey, setActiveKey] = useState("basic")
-  const { t } = useTranslation("userInfo")
+  const { t } = useTranslation()
 
   const handleAvatarChange = (avatarUrl: string) => {
     // 这里处理头像更新逻辑
     console.log("头像更新:", avatarUrl)
-    message.success(t("avatarUpdateSuccess"))
+    message.success(t("view.userInfo.avatarUpdateSuccess"))
   }
 
   const handleInfoUpdate = (values: any) => {
     // 这里处理基本信息更新逻辑
     console.log("基本信息更新:", values)
-    message.success(t("infoUpdateSuccess"))
+    message.success(t("view.userInfo.infoUpdateSuccess"))
   }
 
   const handlePasswordChange = (values: any) => {
     // 这里处理密码修改逻辑
     console.log("密码修改:", values)
-    message.success(t("passwordChangeSuccess"))
+    message.success(t("view.userInfo.passwordChangeSuccess"))
   }
 
   const handlePhoneBind = (phone: string) => {
     // 这里处理手机绑定逻辑
     console.log("手机绑定:", phone)
-    message.success(t("phoneBindSuccess"))
+    message.success(t("view.userInfo.phoneBindSuccess"))
   }
 
   const handleEmailBind = (email: string) => {
     // 这里处理邮箱绑定逻辑
     console.log("邮箱绑定:", email)
-    message.success(t("emailBindSuccess"))
+    message.success(t("view.userInfo.emailBindSuccess"))
   }
 
   const tabItems = [
@@ -48,7 +48,7 @@ const UserInfo: React.FC = () => {
       label: (
         <span>
           <UserOutlined />
-          {t("basicInfo")}
+          {t("view.userInfo.basicInfo")}
         </span>
       ),
       children: (
@@ -67,7 +67,7 @@ const UserInfo: React.FC = () => {
       label: (
         <span>
           <SafetyOutlined />
-          {t("securitySettings")}
+          {t("view.userInfo.securitySettings")}
         </span>
       ),
       children: (
@@ -83,7 +83,7 @@ const UserInfo: React.FC = () => {
       label: (
         <span>
           <HistoryOutlined />
-          {t("loginHistory")}
+          {t("view.userInfo.loginHistory")}
         </span>
       ),
       children: <LoginHistory />,
@@ -92,24 +92,23 @@ const UserInfo: React.FC = () => {
 
   return (
     <UserInfoWrapper>
-      <div className="user-info-container">
-        <div className="page-header">
-          <h1 className="page-title">{t("pageTitle")}</h1>
-          <p className="page-description">{t("pageDescription")}</p>
-        </div>
+      {/* 页面标题 */}
+      <Card title={t("view.userInfo.pageTitle")} bordered={false} style={{ marginBottom: 24 }}>
+        <p style={{ margin: 0, opacity: 0.7 }}>{t("view.userInfo.pageDescription")}</p>
+      </Card>
 
-        <div className="page-content">
-          <Tabs
-            activeKey={activeKey}
-            onChange={setActiveKey}
-            items={tabItems}
-            type="card"
-            size="large"
-            tabPosition="top"
-            className="user-info-tabs"
-          />
-        </div>
-      </div>
+      {/* 主要内容区域 */}
+      <Card bordered={false}>
+        <Tabs
+          activeKey={activeKey}
+          onChange={setActiveKey}
+          items={tabItems}
+          type="card"
+          size="large"
+          tabPosition="top"
+          className="user-info-tabs"
+        />
+      </Card>
     </UserInfoWrapper>
   )
 }

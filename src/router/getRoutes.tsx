@@ -31,21 +31,29 @@ const filterRoute = (routeObj: routesType, validRules: string[] | null): any => 
 }
 
 export const getRoutes = async (roles: string[]) => {
-  const initialRoutes = cloneDeep(routes)
-  const routesModules = import.meta.glob<ModuleType>("./modules/**/*.tsx")
+  try {
+    // 显示自定义全局 Loading
+    eventBus.emit("changeGlobalCustomLoading", true)
 
-  const urlList = Object.keys(routesModules)
-  const routesList: routesType[] = []
-  for (const item of urlList) {
-    const route = await routesModules[item]()
-    routesList.push(route.default)
-  }
-  routesList.forEach((routeData) => {
-    const resultRoute = filterRoute(routeData, roles)
-    if (resultRoute) {
-      initialRoutes.push(resultRoute)
+    const initialRoutes = cloneDeep(routes)
+    const routesModules = import.meta.glob<ModuleType>("./modules/**/*.tsx")
+
+    const urlList = Object.keys(routesModules)
+    const routesList: routesType[] = []
+    for (const item of urlList) {
+      const route = await routesModules[item]()
+      routesList.push(route.default)
     }
-  })
+    routesList.forEach((routeData) => {
+      const resultRoute = filterRoute(routeData, roles)
+      if (resultRoute) {
+        initialRoutes.push(resultRoute)
+      }
+    })
 
-  eventBus.emit("changeRoutes", initialRoutes)
+    eventBus.emit("changeRoutes", initialRoutes)
+  } finally {
+    // 隐藏自定义全局 Loading
+    eventBus.emit("changeGlobalCustomLoading", false)
+  }
 }

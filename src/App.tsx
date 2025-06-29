@@ -22,6 +22,7 @@ import "@/router/getRoutes"
 const App = memo(() => {
   const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
+  const [showGlobalLoading, setShowGlobalLoading] = useState(false)
   const [routes, setRoutes] = useState(initialRoutes)
   const [isRoutesInitialized, setIsRoutesInitialized] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
@@ -35,16 +36,29 @@ const App = memo(() => {
   const renderedRoutes = useRoutes(routes)
 
   // 检查是否所有初始化都完成
-  const isAppReady = isInitialized && (isRoutesInitialized || location.pathname === "/login")
+  const isAppReady = isInitialized && (isRoutesInitialized || excludeRoutes.includes(location.pathname))
 
   useEffect(() => {
-    eventBus.on("changeGlobLoading", (data: boolean) => {
+    const handleGlobalLoading = (data: boolean) => {
       setLoading(data)
-    })
-    eventBus.on("changeRoutes", (data: routesType[]) => {
+    }
+    const handleGlobalCustomLoading = (data: boolean) => {
+      setShowGlobalLoading(data)
+    }
+    const handleRoutesChange = (data: routesType[]) => {
       setRoutes(data)
       setIsRoutesInitialized(true)
-    })
+    }
+
+    eventBus.on("changeGlobLoading", handleGlobalLoading)
+    eventBus.on("changeGlobalCustomLoading", handleGlobalCustomLoading)
+    eventBus.on("changeRoutes", handleRoutesChange)
+
+    return () => {
+      eventBus.off("changeGlobLoading", handleGlobalLoading)
+      eventBus.off("changeGlobalCustomLoading", handleGlobalCustomLoading)
+      eventBus.off("changeRoutes", handleRoutesChange)
+    }
   }, [])
 
   // 监听Menu折叠状态变化
@@ -62,13 +76,13 @@ const App = memo(() => {
 
     return () => {
       window.removeEventListener("storage", handleMenuToggle)
-      // eventBus没有off方法，这里不需要清理
+      eventBus.off("menuToggle", handleMenuToggle)
     }
   }, [])
 
   useEffect(() => {
     if (!isInitialized) {
-      if (location.pathname !== "/login") {
+      if (!excludeRoutes.includes(location.pathname)) {
         if (localStorage.getItem("token")) {
           dispatch(asyncGetUserInfo({}))
             .then((res: any) => {
@@ -85,6 +99,9 @@ const App = memo(() => {
           setIsInitialized(true)
           navigate("/login")
         }
+      } else {
+        // 如果是登录页等排除路由，直接初始化完成
+        setIsInitialized(true)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,13 +136,13 @@ const App = memo(() => {
       <RouteProgress />
 
       {/* 显示Loading组件 */}
-      {showLoading && (
+      {(showLoading || showGlobalLoading) && (
         <Loading
           fullScreen
           size="large"
           text={import.meta.env.VITE_PROJECT_NAME}
-          isExiting={isLoadingExiting}
-          onExitComplete={handleLoadingExitComplete}
+          isExiting={showLoading ? isLoadingExiting : false}
+          onExitComplete={showLoading ? handleLoadingExitComplete : undefined}
         />
       )}
 

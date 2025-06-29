@@ -27,7 +27,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
   const [passwordForm] = Form.useForm()
   const [phoneForm] = Form.useForm()
   const [emailForm] = Form.useForm()
-  const { t } = useTranslation("userInfo")
+  const { t } = useTranslation()
   const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
   const handlePasswordChange = async (values: any) => {
@@ -35,11 +35,11 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
       // 这里调用修改密码的API
       // await changePassword(values)
       onPasswordChange?.(values)
-      message.success(t("passwordChangeSuccess"))
+      message.success(t("view.userInfo.passwordChangeSuccess"))
       setPasswordModalVisible(false)
       passwordForm.resetFields()
     } catch {
-      message.error(t("passwordChangeFailed"))
+      message.error(t("view.userInfo.passwordChangeFailed"))
     }
   }
 
@@ -48,11 +48,11 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
       // 这里调用绑定手机的API
       // await bindPhone(values)
       onPhoneBind?.(values.phone)
-      message.success(t("phoneBindSuccess"))
+      message.success(t("view.userInfo.phoneBindSuccess"))
       setPhoneModalVisible(false)
       phoneForm.resetFields()
     } catch {
-      message.error(t("phoneBindFailed"))
+      message.error(t("view.userInfo.phoneBindFailed"))
     }
   }
 
@@ -61,60 +61,60 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
       // 这里调用绑定邮箱的API
       // await bindEmail(values)
       onEmailBind?.(values.email)
-      message.success(t("emailBindSuccess"))
+      message.success(t("view.userInfo.emailBindSuccess"))
       setEmailModalVisible(false)
       emailForm.resetFields()
     } catch {
-      message.error(t("emailBindFailed"))
+      message.error(t("view.userInfo.emailBindFailed"))
     }
   }
 
   const securityItems = [
     {
-      title: t("loginPassword"),
-      description: t("passwordDescription"),
+      title: t("view.userInfo.loginPassword"),
+      description: t("view.userInfo.passwordDescription"),
       icon: <LockOutlined style={{ color: "#1890ff" }} />,
-      status: t("bound"),
+      status: t("view.userInfo.bound"),
       statusColor: "green",
       action: () => setPasswordModalVisible(true),
-      actionText: t("modify"),
+      actionText: t("view.userInfo.modify"),
     },
     {
-      title: t("phoneBinding"),
-      description: `${t("boundPhone")}：${
-        userInfo.phone ? userInfo.phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2") : t("unbound")
+      title: t("view.userInfo.phoneBinding"),
+      description: `${t("view.userInfo.boundPhone")}：${
+        userInfo.phone ? userInfo.phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2") : t("view.userInfo.unbound")
       }`,
       icon: <MobileOutlined style={{ color: "#52c41a" }} />,
-      status: userInfo.phone ? t("bound") : t("unbound"),
+      status: userInfo.phone ? t("view.userInfo.bound") : t("view.userInfo.unbound"),
       statusColor: userInfo.phone ? "green" : "red",
       action: () => setPhoneModalVisible(true),
-      actionText: userInfo.phone ? t("change") : t("bind"),
+      actionText: userInfo.phone ? t("view.userInfo.change") : t("view.userInfo.bind"),
     },
     {
-      title: t("emailBinding"),
-      description: `${t("boundEmail")}：${
-        userInfo.email ? userInfo.email.replace(/(.{2}).*(@.*)/, "$1***$2") : t("unbound")
+      title: t("view.userInfo.emailBinding"),
+      description: `${t("view.userInfo.boundEmail")}：${
+        userInfo.email ? userInfo.email.replace(/(.{2}).*(@.*)/, "$1***$2") : t("view.userInfo.unbound")
       }`,
       icon: <MailOutlined style={{ color: "#fa8c16" }} />,
-      status: userInfo.email ? t("bound") : t("unbound"),
+      status: userInfo.email ? t("view.userInfo.bound") : t("view.userInfo.unbound"),
       statusColor: userInfo.email ? "green" : "red",
       action: () => setEmailModalVisible(true),
-      actionText: userInfo.email ? t("change") : t("bind"),
+      actionText: userInfo.email ? t("view.userInfo.change") : t("view.userInfo.bind"),
     },
     {
-      title: t("twoFactorAuth"),
-      description: t("twoFactorDescription"),
+      title: t("view.userInfo.twoFactorAuth"),
+      description: t("view.userInfo.twoFactorDescription"),
       icon: <SafetyOutlined style={{ color: "#722ed1" }} />,
-      status: t("unbound"),
+      status: t("view.userInfo.unbound"),
       statusColor: "red",
-      action: () => message.info(t("twoFactorFeature")),
-      actionText: t("enable"),
+      action: () => message.info(t("view.userInfo.twoFactorFeature")),
+      actionText: t("view.userInfo.enable"),
     },
   ]
 
   return (
     <SecuritySettingsWrapper>
-      <Card title={t("securitySettingsTitle")}>
+      <Card title={t("view.userInfo.securitySettingsTitle")}>
         <List
           itemLayout="horizontal"
           dataSource={securityItems}
@@ -148,7 +148,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
 
       {/* 修改密码弹窗 */}
       <Modal
-        title={t("changePassword")}
+        title={t("view.userInfo.changePassword")}
         open={passwordModalVisible}
         onCancel={() => setPasswordModalVisible(false)}
         footer={null}
@@ -162,7 +162,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
               return (
                 <div style={{ textAlign: "right" }}>
                   <Button onClick={() => setPasswordModalVisible(false)} style={{ marginRight: 8 }}>
-                    {t("cancel")}
+                    {t("view.userInfo.cancel")}
                   </Button>
                   {doms[1]}
                 </div>
@@ -172,31 +172,31 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
         >
           <ProFormText.Password
             name="oldPassword"
-            label={t("currentPassword")}
-            placeholder={t("enterCurrentPassword")}
-            rules={[{ required: true, message: t("pleaseEnterCurrentPassword") }]}
+            label={t("view.userInfo.currentPassword")}
+            placeholder={t("view.userInfo.enterCurrentPassword")}
+            rules={[{ required: true, message: t("view.userInfo.pleaseEnterCurrentPassword") }]}
           />
           <ProFormText.Password
             name="newPassword"
-            label={t("newPassword")}
-            placeholder={t("enterNewPassword")}
+            label={t("view.userInfo.newPassword")}
+            placeholder={t("view.userInfo.enterNewPassword")}
             rules={[
-              { required: true, message: t("pleaseEnterNewPassword") },
-              { min: 6, message: t("passwordLengthError") },
+              { required: true, message: t("view.userInfo.pleaseEnterNewPassword") },
+              { min: 6, message: t("view.userInfo.passwordLengthError") },
             ]}
           />
           <ProFormText.Password
             name="confirmPassword"
-            label={t("confirmPassword")}
-            placeholder={t("confirmNewPassword")}
+            label={t("view.userInfo.confirmPassword")}
+            placeholder={t("view.userInfo.confirmNewPassword")}
             rules={[
-              { required: true, message: t("pleaseConfirmPassword") },
+              { required: true, message: t("view.userInfo.pleaseConfirmPassword") },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue("newPassword") === value) {
                     return Promise.resolve()
                   }
-                  return Promise.reject(new Error(t("passwordMismatch")))
+                  return Promise.reject(new Error(t("view.userInfo.passwordMismatch")))
                 },
               }),
             ]}
@@ -206,7 +206,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
 
       {/* 绑定手机弹窗 */}
       <Modal
-        title={t("bindPhone")}
+        title={t("view.userInfo.bindPhone")}
         open={phoneModalVisible}
         onCancel={() => setPhoneModalVisible(false)}
         footer={null}
@@ -220,7 +220,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
               return (
                 <div style={{ textAlign: "right" }}>
                   <Button onClick={() => setPhoneModalVisible(false)} style={{ marginRight: 8 }}>
-                    {t("cancel")}
+                    {t("view.userInfo.cancel")}
                   </Button>
                   {doms[1]}
                 </div>
@@ -230,31 +230,32 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
         >
           <ProFormText
             name="phone"
-            label={t("phoneNumber")}
-            placeholder={t("enterPhoneNumber")}
+            label={t("view.userInfo.phoneNumber")}
+            placeholder={t("view.userInfo.enterPhoneNumber")}
             rules={[
-              { required: true, message: t("pleaseEnterPhoneNumber") },
-              { pattern: /^1[3-9]\d{9}$/, message: t("invalidPhoneFormat") },
+              { required: true, message: t("view.userInfo.pleaseEnterPhoneNumber") },
+              { pattern: /^1[3-9]\d{9}$/, message: t("view.userInfo.invalidPhoneFormat") },
             ]}
           />
-          <div style={{ display: "flex", gap: 8 }}>
-            <ProFormText
-              name="verifyCode"
-              label={t("verifyCode")}
-              placeholder={t("enterVerifyCode")}
-              rules={[{ required: true, message: t("pleaseEnterVerifyCode") }]}
-              style={{ flex: 1 }}
-            />
-            <Button style={{ marginTop: 32 }} onClick={() => message.info(t("verifyCodeFeature"))}>
-              {t("getVerifyCode")}
-            </Button>
-          </div>
+          <ProFormText
+            name="verifyCode"
+            label={t("view.userInfo.verifyCode")}
+            placeholder={t("view.userInfo.enterVerifyCode")}
+            rules={[{ required: true, message: t("view.userInfo.pleaseEnterVerifyCode") }]}
+            fieldProps={{
+              suffix: (
+                <Button type="link" size="small" onClick={() => message.info(t("view.userInfo.verifyCodeFeature"))}>
+                  {t("view.userInfo.getVerifyCode")}
+                </Button>
+              ),
+            }}
+          />
         </ProForm>
       </Modal>
 
       {/* 绑定邮箱弹窗 */}
       <Modal
-        title={t("bindEmail")}
+        title={t("view.userInfo.bindEmail")}
         open={emailModalVisible}
         onCancel={() => setEmailModalVisible(false)}
         footer={null}
@@ -268,7 +269,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
               return (
                 <div style={{ textAlign: "right" }}>
                   <Button onClick={() => setEmailModalVisible(false)} style={{ marginRight: 8 }}>
-                    {t("cancel")}
+                    {t("view.userInfo.cancel")}
                   </Button>
                   {doms[1]}
                 </div>
@@ -278,25 +279,13 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
         >
           <ProFormText
             name="email"
-            label={t("emailAddress")}
-            placeholder={t("enterEmailAddress")}
+            label={t("view.userInfo.emailAddress")}
+            placeholder={t("view.userInfo.enterEmailAddress")}
             rules={[
-              { required: true, message: t("pleaseEnterEmailAddress") },
-              { type: "email", message: t("invalidEmailFormat") },
+              { required: true, message: t("view.userInfo.pleaseEnterEmailAddress") },
+              { type: "email", message: t("view.userInfo.invalidEmailFormat") },
             ]}
           />
-          <div style={{ display: "flex", gap: 8 }}>
-            <ProFormText
-              name="verifyCode"
-              label={t("verifyCode")}
-              placeholder={t("enterVerifyCode")}
-              rules={[{ required: true, message: t("pleaseEnterVerifyCode") }]}
-              style={{ flex: 1 }}
-            />
-            <Button style={{ marginTop: 32 }} onClick={() => message.info(t("verifyCodeFeature"))}>
-              {t("getVerifyCode")}
-            </Button>
-          </div>
         </ProForm>
       </Modal>
     </SecuritySettingsWrapper>

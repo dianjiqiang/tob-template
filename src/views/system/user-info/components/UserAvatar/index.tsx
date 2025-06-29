@@ -15,7 +15,7 @@ interface UserAvatarProps {
 const UserAvatar: React.FC<UserAvatarProps> = ({ onAvatarChange }) => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState("")
-  const { t } = useTranslation("userInfo")
+  const { t } = useTranslation()
   const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
   const handlePreview = async (file: any) => {
@@ -43,11 +43,11 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ onAvatarChange }) => {
     beforeUpload: (file) => {
       const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"
       if (!isJpgOrPng) {
-        message.error(t("avatarFormatError"))
+        message.error(t("view.userInfo.avatarFormatError"))
       }
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
-        message.error(t("avatarSizeError"))
+        message.error(t("view.userInfo.avatarSizeError"))
       }
       return isJpgOrPng && isLt2M
     },
@@ -55,9 +55,9 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ onAvatarChange }) => {
       if (info.file.status === "done") {
         const avatarUrl = info.file.response?.url || URL.createObjectURL(info.file.originFileObj!)
         onAvatarChange?.(avatarUrl)
-        message.success(t("avatarUploadSuccess"))
+        message.success(t("view.userInfo.avatarUploadSuccess"))
       } else if (info.file.status === "error") {
-        message.error(t("avatarUploadFailed"))
+        message.error(t("view.userInfo.avatarUploadFailed"))
       }
     },
     onPreview: handlePreview,
@@ -71,17 +71,22 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ onAvatarChange }) => {
             <Avatar size={120} src={userInfo.avatar || Image} icon={<UserOutlined />} className="user-avatar" />
             <div className="avatar-overlay">
               <CameraOutlined className="camera-icon" />
-              <span className="upload-text">{t("changeAvatar")}</span>
+              <span className="upload-text">{t("view.userInfo.changeAvatar")}</span>
             </div>
           </div>
         </Upload>
         <div className="avatar-info">
-          <h3 className="user-name">{userInfo.name || userInfo.username || t("normalUser")}</h3>
-          <p className="user-role">{userInfo.role || t("normalUser")}</p>
+          <h3 className="user-name">{userInfo.name || userInfo.username || t("view.userInfo.normalUser")}</h3>
+          <p className="user-role">{userInfo.role || t("view.userInfo.normalUser")}</p>
         </div>
       </div>
 
-      <Modal open={previewOpen} title={t("uploadAvatar")} footer={null} onCancel={() => setPreviewOpen(false)}>
+      <Modal
+        open={previewOpen}
+        title={t("view.userInfo.uploadAvatar")}
+        footer={null}
+        onCancel={() => setPreviewOpen(false)}
+      >
         <img alt="avatar" style={{ width: "100%" }} src={previewImage} />
       </Modal>
     </UserAvatarWrapper>

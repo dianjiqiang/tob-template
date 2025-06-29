@@ -1,4 +1,5 @@
 import keyieRequest from "@/utils/servers"
+import eventBus from "@/utils/eventbus"
 
 import { GatWay } from "@/const"
 
@@ -14,20 +15,28 @@ export const apiPostLogin = (data: any) => {
       data,
     },
     {
-      useGlobalLoading: true,
       useMessage: "confirm",
     }
   )
 }
 
 // 获取用户信息接口
-export const apiGetCurrentInfo = () => {
-  return keyieRequest.get(
-    {
-      url: UserApi.GetCurrentInfo,
-    },
-    {
-      useGlobalLoading: true,
-    }
-  )
+export const apiGetCurrentInfo = async () => {
+  // 触发自定义全局Loading
+  eventBus.emit("changeGlobalCustomLoading", true)
+
+  try {
+    const result = await keyieRequest.get(
+      {
+        url: UserApi.GetCurrentInfo,
+      },
+      {
+        useMessage: "none",
+      }
+    )
+    return result
+  } finally {
+    // 隐藏自定义全局Loading
+    eventBus.emit("changeGlobalCustomLoading", false)
+  }
 }

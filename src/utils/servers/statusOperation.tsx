@@ -2,7 +2,6 @@ import { KeyieUseMessageType } from "./type"
 import { statusCode } from "@/const/modules/statusCode"
 import { message as messageApi, Modal, notification } from "antd"
 import { CloseCircleOutlined } from "@ant-design/icons"
-import { basicThemeData } from "@/context/ThemeContext"
 import i18next from "i18next"
 
 const { confirm } = Modal
@@ -126,7 +125,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.serverError"),
           description: message ?? i18next.t("error.serverErrorDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.FORBIDDEN:
@@ -134,7 +133,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.permissionDenied"),
           description: message ?? i18next.t("error.permissionDeniedDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.UNAUTHORIZED:
@@ -142,7 +141,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.notLoggedIn"),
           description: message ?? i18next.t("error.notLoggedInDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.NOT_FOUND:
@@ -150,7 +149,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.requestUrlError"),
           description: message ?? i18next.t("error.requestUrlErrorDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.METHOD_NOT_ALLOWED:
@@ -158,7 +157,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.requestMethodError"),
           description: message ?? i18next.t("error.requestMethodErrorDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.BAD_GATEWAY:
@@ -166,7 +165,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.gatewayError"),
           description: message ?? i18next.t("error.gatewayErrorDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.NOT_IMPLEMENTED:
@@ -174,7 +173,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.serviceNotImplemented"),
           description: message ?? i18next.t("error.serviceNotImplementedDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       case statusCode.REQUEST_TIMEOUT:
@@ -182,7 +181,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.requestTimeout"),
           description: message ?? i18next.t("error.requestTimeoutDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
       default:
@@ -190,7 +189,7 @@ export const statusOperation = (status: number, useMessage: KeyieUseMessageType,
           message: i18next.t("error.systemException"),
           description: message ?? i18next.t("error.systemExceptionDesc"),
           duration: 0,
-          closeIcon: <CloseCircleOutlined style={{ color: basicThemeData["danger-color"] }} />,
+          closeIcon: <CloseCircleOutlined style={{ color: "var(--danger-color)" }} />,
         })
         break
     }

@@ -1,68 +1,50 @@
 import styled from "styled-components"
 
 export const UserInfoWrapper = styled.div`
-  .user-info-container {
-    padding: 24px;
+  & {
+    padding: 16px;
     min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .page-header {
-    margin-bottom: 24px;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  .ant-card {
+    height: 100%;
   }
 
-  .page-title {
-    margin: 0 0 8px 0;
-    font-size: 24px;
-    font-weight: 600;
+  .ant-card-body {
+    height: calc(100% - 57px); // 减去卡片标题的高度
+    display: flex;
+    flex-direction: column;
   }
 
-  .page-description {
-    margin: 0;
-    font-size: 14px;
-    opacity: 0.7;
-  }
+  .user-info-tabs {
+    .ant-tabs-nav {
+      margin-bottom: 24px;
+    }
 
-  .page-content {
-    .user-info-tabs {
-      .ant-tabs-nav {
-        margin-bottom: 24px;
+    .ant-tabs-tab {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+
+      .anticon {
+        margin-right: 8px;
       }
+    }
 
-      .ant-tabs-tab {
-        padding: 12px 24px;
-        font-size: 16px;
-        font-weight: 500;
+    .ant-tabs-content-holder {
+      background: transparent;
+    }
 
-        .anticon {
-          margin-right: 8px;
-        }
-      }
-
-      .ant-tabs-content-holder {
-        background: transparent;
-      }
-
-      .ant-tabs-tabpane {
-        padding: 0;
-      }
+    .ant-tabs-tabpane {
+      padding: 0;
     }
   }
 
   @media (max-width: 768px) {
-    .user-info-container {
-      padding: 16px;
-    }
-
-    .page-header {
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .page-title {
-      font-size: 20px;
+    & {
+      padding: 12px;
     }
 
     .user-info-tabs {

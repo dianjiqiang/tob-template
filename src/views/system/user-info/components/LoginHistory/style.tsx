@@ -1,10 +1,6 @@
 import styled from "styled-components"
 
 export const LoginHistoryWrapper = styled.div`
-  .ant-card {
-    margin-bottom: 24px;
-  }
-
   .ant-table {
     .ant-table-thead > tr > th {
       font-weight: 500;

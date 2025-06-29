@@ -3,6 +3,7 @@ export default [
   {
     url: `/basic-api/user-server/login`,
     method: "post",
+    timeout: 2000,
     response: (params: any) => {
       const { username, password } = params.body
       if (username === "keyie" && password === "yuyubaobao") {
@@ -23,6 +24,7 @@ export default [
   {
     url: "/basic-api/user-server/getCurrentInfo",
     method: "get",
+    timeout: 2000,
     response: () => {
       return {
         code: 200,

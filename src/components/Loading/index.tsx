@@ -25,8 +25,16 @@ const Loading: React.FC<LoadingProps> = memo(
         }, 400)
 
         return () => clearTimeout(timer)
+      } else {
+        // 如果不是退出状态，确保组件渲染
+        setShouldRender(true)
       }
     }, [isExiting, onExitComplete])
+
+    // 如果没有onExitComplete回调，直接根据isExiting状态决定是否渲染
+    if (!onExitComplete && isExiting) {
+      return null
+    }
 
     if (!shouldRender) {
       return null

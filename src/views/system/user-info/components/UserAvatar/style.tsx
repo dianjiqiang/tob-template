@@ -5,9 +5,7 @@ export const UserAvatarWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
   }
 
   .avatar-wrapper {

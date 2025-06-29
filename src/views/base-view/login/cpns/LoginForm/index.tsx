@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { memo, useState } from "react"
 import type { ReactNode } from "react"
 import { LoginFormStyled } from "./style"
 import { apiPostLogin } from "@/api/user"
@@ -22,6 +22,7 @@ type FieldType = {
 const LoginForm: React.FC<LoginFormType> = memo(() => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const [loginLoading, setLoginLoading] = useState(false)
 
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -30,28 +31,40 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
     form
       .validateFields()
       .then(async (values) => {
-        const res = await apiPostLogin(values)
+        setLoginLoading(true)
+        try {
+          // 登录接口调用
+          const res = await apiPostLogin(values)
 
-        localStorage.setItem("token", res.token)
-        dispatch(setToken(res.token))
-        if (values.remember === true) {
-          localStorage.setItem("username", values.username)
-          localStorage.setItem("password", values.password)
-        } else {
-          localStorage.setItem("username", values.username)
-          localStorage.removeItem("username")
+          localStorage.setItem("token", res.token)
+          dispatch(setToken(res.token))
+          if (values.remember === true) {
+            localStorage.setItem("username", values.username)
+            localStorage.setItem("password", values.password)
+          } else {
+            localStorage.setItem("username", values.username)
+            localStorage.removeItem("password")
+          }
+
+          // 获取用户信息并加载路由 - 这里会触发全局loading，但按钮loading会覆盖它
+          await dispatch(asyncGetUserInfo({}) as any)
+            .then((res: any) => {
+              dispatch(setUserInfo(res.payload))
+              // 路由加载完成后跳转
+              navigate("/analytics/statistics")
+            })
+            .catch(() => {
+              message.error(t("error.getUserInfoFailed"))
+            })
+        } catch (error) {
+          console.error(t("error.formValidationFailed"), error)
+        } finally {
+          setLoginLoading(false)
         }
-        dispatch(asyncGetUserInfo({}) as any)
-          .then((res: any) => {
-            dispatch(setUserInfo(res.payload))
-            navigate("/analytics/statistics")
-          })
-          .catch(() => {
-            message.error(t("error.getUserInfoFailed"))
-          })
       })
       .catch((error) => {
         console.error(t("error.formValidationFailed"), error)
+        setLoginLoading(false)
       })
   }
 
@@ -97,7 +110,13 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
           </Form.Item>
         </Form>
         <div className="form-submit-button">
-          <Button type="primary" size="large" style={{ width: "320px" }} onClick={handleSubmitClick}>
+          <Button
+            type="primary"
+            size="large"
+            style={{ width: "320px" }}
+            onClick={handleSubmitClick}
+            loading={loginLoading}
+          >
             {t("user.login")}
           </Button>
         </div>

@@ -14,7 +14,7 @@ interface BasicInfoProps {
 const BasicInfo: React.FC<BasicInfoProps> = ({ onInfoUpdate }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [form] = ProForm.useForm()
-  const { t } = useTranslation("userInfo")
+  const { t } = useTranslation()
   const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
   const handleEdit = () => {
@@ -32,60 +32,68 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ onInfoUpdate }) => {
       // 这里调用更新用户信息的API
       // await updateUserInfo(values)
       onInfoUpdate?.(values)
-      message.success(t("infoUpdateSuccess"))
+      message.success(t("view.userInfo.infoUpdateSuccess"))
       setIsEditing(false)
     } catch {
-      message.error(t("infoUpdateFailed"))
+      message.error(t("view.userInfo.infoUpdateFailed"))
     }
   }
 
   const genderOptions = [
-    { label: t("male"), value: "male" },
-    { label: t("female"), value: "female" },
-    { label: t("secret"), value: "secret" },
+    { label: t("view.userInfo.male"), value: "male" },
+    { label: t("view.userInfo.female"), value: "female" },
+    { label: t("view.userInfo.secret"), value: "secret" },
   ]
 
   const statusOptions = [
-    { label: t("active"), value: "active" },
-    { label: t("inactive"), value: "inactive" },
-    { label: t("pending"), value: "pending" },
+    { label: t("view.userInfo.active"), value: "active" },
+    { label: t("view.userInfo.inactive"), value: "inactive" },
+    { label: t("view.userInfo.pending"), value: "pending" },
   ]
 
   const renderUserInfo = () => (
-    <Descriptions column={2} bordered>
-      <Descriptions.Item label={t("username")} span={1}>
+    <Descriptions column={2}>
+      <Descriptions.Item label={t("view.userInfo.username")} span={1}>
         {userInfo.username || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("realName")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.realName")} span={1}>
         {userInfo.realName || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("email")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.email")} span={1}>
         {userInfo.email || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("phone")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.phone")} span={1}>
         {userInfo.phone || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("gender")} span={1}>
-        {userInfo.gender === "male" ? t("male") : userInfo.gender === "female" ? t("female") : t("secret")}
+      <Descriptions.Item label={t("view.userInfo.gender")} span={1}>
+        {userInfo.gender === "male"
+          ? t("view.userInfo.male")
+          : userInfo.gender === "female"
+          ? t("view.userInfo.female")
+          : t("view.userInfo.secret")}
       </Descriptions.Item>
-      <Descriptions.Item label={t("birthday")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.birthday")} span={1}>
         {userInfo.birthday || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("department")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.department")} span={1}>
         {userInfo.department || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("position")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.position")} span={1}>
         {userInfo.position || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("status")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.status")} span={1}>
         <Tag color={userInfo.status === "active" ? "green" : userInfo.status === "inactive" ? "red" : "orange"}>
-          {userInfo.status === "active" ? t("active") : userInfo.status === "inactive" ? t("inactive") : t("pending")}
+          {userInfo.status === "active"
+            ? t("view.userInfo.active")
+            : userInfo.status === "inactive"
+            ? t("view.userInfo.inactive")
+            : t("view.userInfo.pending")}
         </Tag>
       </Descriptions.Item>
-      <Descriptions.Item label={t("joinDate")} span={1}>
+      <Descriptions.Item label={t("view.userInfo.joinDate")} span={1}>
         {userInfo.joinDate || "-"}
       </Descriptions.Item>
-      <Descriptions.Item label={t("bio")} span={2}>
+      <Descriptions.Item label={t("view.userInfo.bio")} span={2}>
         {userInfo.bio || "-"}
       </Descriptions.Item>
     </Descriptions>
@@ -94,19 +102,19 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ onInfoUpdate }) => {
   return (
     <BasicInfoWrapper>
       <Card
-        title={t("basicInfoTitle")}
+        title={t("view.userInfo.basicInfoTitle")}
         extra={
           !isEditing ? (
             <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
-              {t("edit")}
+              {t("view.userInfo.edit")}
             </Button>
           ) : (
             <div>
               <Button icon={<CloseOutlined />} onClick={handleCancel} style={{ marginRight: 8 }}>
-                {t("cancel")}
+                {t("view.userInfo.cancel")}
               </Button>
               <Button type="primary" icon={<SaveOutlined />} onClick={() => form.submit()}>
-                {t("save")}
+                {t("view.userInfo.save")}
               </Button>
             </div>
           )
@@ -123,41 +131,72 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ onInfoUpdate }) => {
           >
             <ProFormText
               name="username"
-              label={t("username")}
-              placeholder={t("enterUsername")}
-              rules={[{ required: true, message: t("pleaseEnterUsername") }]}
+              label={t("view.userInfo.username")}
+              placeholder={t("view.userInfo.enterUsername")}
+              rules={[{ required: true, message: t("view.userInfo.pleaseEnterUsername") }]}
             />
             <ProFormText
               name="realName"
-              label={t("realName")}
-              placeholder={t("enterRealName")}
-              rules={[{ required: true, message: t("pleaseEnterRealName") }]}
+              label={t("view.userInfo.realName")}
+              placeholder={t("view.userInfo.enterRealName")}
+              rules={[{ required: true, message: t("view.userInfo.pleaseEnterRealName") }]}
             />
             <ProFormText
               name="email"
-              label={t("email")}
-              placeholder={t("enterEmail")}
+              label={t("view.userInfo.email")}
+              placeholder={t("view.userInfo.enterEmail")}
               rules={[
-                { required: true, message: t("pleaseEnterEmail") },
-                { type: "email", message: t("invalidEmailFormat") },
+                { required: true, message: t("view.userInfo.pleaseEnterEmail") },
+                { type: "email", message: t("view.userInfo.invalidEmailFormat") },
               ]}
             />
             <ProFormText
               name="phone"
-              label={t("phone")}
-              placeholder={t("enterPhone")}
+              label={t("view.userInfo.phone")}
+              placeholder={t("view.userInfo.enterPhone")}
               rules={[
-                { required: true, message: t("pleaseEnterPhone") },
-                { pattern: /^1[3-9]\d{9}$/, message: t("invalidPhoneFormat") },
+                { required: true, message: t("view.userInfo.pleaseEnterPhone") },
+                { pattern: /^1[3-9]\d{9}$/, message: t("view.userInfo.invalidPhoneFormat") },
               ]}
             />
-            <ProFormSelect name="gender" label={t("gender")} options={genderOptions} placeholder={t("selectGender")} />
-            <ProFormDatePicker name="birthday" label={t("birthday")} placeholder={t("selectBirthday")} />
-            <ProFormText name="department" label={t("department")} placeholder={t("enterDepartment")} />
-            <ProFormText name="position" label={t("position")} placeholder={t("enterPosition")} />
-            <ProFormSelect name="status" label={t("status")} options={statusOptions} placeholder={t("selectStatus")} />
-            <ProFormDatePicker name="joinDate" label={t("joinDate")} placeholder={t("selectJoinDate")} />
-            <ProFormTextArea name="bio" label={t("bio")} placeholder={t("enterBio")} fieldProps={{ rows: 4 }} />
+            <ProFormSelect
+              name="gender"
+              label={t("view.userInfo.gender")}
+              options={genderOptions}
+              placeholder={t("view.userInfo.selectGender")}
+            />
+            <ProFormDatePicker
+              name="birthday"
+              label={t("view.userInfo.birthday")}
+              placeholder={t("view.userInfo.selectBirthday")}
+            />
+            <ProFormText
+              name="department"
+              label={t("view.userInfo.department")}
+              placeholder={t("view.userInfo.enterDepartment")}
+            />
+            <ProFormText
+              name="position"
+              label={t("view.userInfo.position")}
+              placeholder={t("view.userInfo.enterPosition")}
+            />
+            <ProFormSelect
+              name="status"
+              label={t("view.userInfo.status")}
+              options={statusOptions}
+              placeholder={t("view.userInfo.selectStatus")}
+            />
+            <ProFormDatePicker
+              name="joinDate"
+              label={t("view.userInfo.joinDate")}
+              placeholder={t("view.userInfo.selectJoinDate")}
+            />
+            <ProFormTextArea
+              name="bio"
+              label={t("view.userInfo.bio")}
+              placeholder={t("view.userInfo.enterBio")}
+              fieldProps={{ rows: 4 }}
+            />
           </ProForm>
         ) : (
           renderUserInfo()
