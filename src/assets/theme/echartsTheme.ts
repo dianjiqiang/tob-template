@@ -1,4 +1,4 @@
-import type { ThemeDataType } from "context/ThemeContext"
+import type { ThemeType } from "store/theme"
 
 // 统一的主题配色方案
 const themeColors = {
@@ -12,7 +12,7 @@ const themeColors = {
   yellow: "#FADB14",
 }
 
-export const createEchartsDarkTheme = (theme: ThemeDataType) => {
+export const createEchartsDarkTheme = (theme: ThemeType) => {
   return {
     // backgroundColor: theme.background,
 

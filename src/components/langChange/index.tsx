@@ -1,10 +1,11 @@
-import React, { memo, useState, useContext, useEffect } from "react"
+import React, { memo, useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import type { ReactNode } from "react"
 import { LangChangeStyled } from "./style"
 import { Popover } from "antd"
 import classnames from "classnames"
-import { ThemeContext } from "@/context/ThemeContext"
+import { useThemeStore } from "store/theme"
+import { useShallow } from "zustand/shallow"
 
 import DarkLang from "@/assets/dark-lang.svg"
 import LightLang from "@/assets/light-lang.svg"
@@ -23,7 +24,7 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
   const [lang, setLang] = useState(localStorage.getItem("lang") ? localStorage.getItem("lang") : "zh")
   const [open, setOpen] = useState(false)
   const { i18n } = useTranslation()
-  const theme = useContext(ThemeContext)
+  const theme = useThemeStore(useShallow((state) => state.theme))
 
   useEffect(() => {
     if (lang) {
@@ -42,7 +43,7 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
   }
 
   return (
-    <LangChangeStyled setThemeState={undefined}>
+    <LangChangeStyled>
       <div className="popover-wrapper">
         <Popover
           content={options.map((item) => (
@@ -58,7 +59,7 @@ const LangChange: React.FC<LangChangeType> = memo(() => {
           trigger="click"
           open={open}
         >
-          {theme.theme === "dark" ? (
+          {theme === "dark" ? (
             <img style={{ position: "relative", top: "3px" }} src={DarkLang} alt="" onClick={() => setOpen(!open)} />
           ) : (
             <img style={{ position: "relative", top: "3px" }} src={LightLang} alt="" onClick={() => setOpen(!open)} />

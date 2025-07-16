@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { themeColors } from "@/const"
 
 export const UserAvatarWrapper = styled.div`
   .avatar-container {
@@ -21,7 +22,7 @@ export const UserAvatarWrapper = styled.div`
   }
 
   .user-avatar {
-    border: 4px solid #f0f0f0;
+    border: 4px solid ${themeColors.border};
     transition: all 0.3s ease;
   }
 

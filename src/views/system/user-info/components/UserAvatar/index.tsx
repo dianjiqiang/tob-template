@@ -2,9 +2,8 @@ import React, { useState } from "react"
 import { Avatar, Upload, message, Modal } from "antd"
 import { UserOutlined, CameraOutlined } from "@ant-design/icons"
 import type { UploadProps } from "antd"
-import { useSelector } from "react-redux"
 import { useTranslation } from "react-i18next"
-import { RootState } from "@/store"
+import { userStore } from "@/store/user"
 import { UserAvatarWrapper } from "./style.tsx"
 import Image from "@/assets/image/avatar.jpg"
 
@@ -16,7 +15,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ onAvatarChange }) => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState("")
   const { t } = useTranslation()
-  const userInfo = useSelector((state: RootState) => state.user.userInfo)
+  const userInfo = userStore((state) => state.userInfo)
 
   const handlePreview = async (file: any) => {
     if (!file.url && !file.preview) {

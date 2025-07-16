@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { themeColors } from "@/const"
 
 export const LoginHistoryWrapper = styled.div`
   .ant-table {
@@ -25,7 +26,10 @@ export const LoginHistoryWrapper = styled.div`
       &.ant-pagination-item-active {
         background: ${(props) => props.theme["primary-color"]};
         border-color: ${(props) => props.theme["primary-color"]};
-        color: #fff;
+        color: ${(props) =>
+          props.theme.background === themeColors.darkBackground
+            ? themeColors.darkTextPrimary
+            : themeColors.textPrimary};
       }
     }
 

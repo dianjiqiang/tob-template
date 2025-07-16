@@ -3,9 +3,9 @@ import { useRoutes, useLocation, useNavigate } from "react-router-dom"
 import { Spin, message } from "antd"
 import { useTranslation } from "react-i18next"
 import initialRoutes, { excludeRoutes } from "router/index"
-import { asyncGetUserInfo, setUserInfo } from "./store/modules/user"
-import { useDispatch } from "react-redux"
-import type { routesType } from "./router/type"
+
+import { useShallow } from "zustand/shallow"
+import { userStore } from "./store/user"
 
 import Menu from "./components/Menu"
 import Header from "./components/Header"
@@ -16,8 +16,9 @@ import { AppStyled } from "./style"
 import eventBus from "@/utils/eventbus"
 import { style } from "@/const"
 
+import type { routesType } from "./router/type"
+
 import "./i18n"
-import "@/router/getRoutes"
 
 const App = memo(() => {
   const { t } = useTranslation()
@@ -29,7 +30,12 @@ const App = memo(() => {
   const [isLoadingExiting, setIsLoadingExiting] = useState(false)
   const [showLoading, setShowLoading] = useState(true)
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(localStorage.getItem("isFoundMenu") === "true")
-  const dispatch = useDispatch<any>()
+  const { asyncGetUserInfo, asyncInitialRoutes } = userStore(
+    useShallow((state) => ({
+      asyncGetUserInfo: state.asyncGetUserInfo,
+      asyncInitialRoutes: state.asyncInitialRoutes,
+    }))
+  )
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -43,7 +49,12 @@ const App = memo(() => {
       setLoading(data)
     }
     const handleGlobalCustomLoading = (data: boolean) => {
-      setShowGlobalLoading(data)
+      if (data) {
+        setShowGlobalLoading(true)
+        setIsLoadingExiting(false)
+      } else {
+        setIsLoadingExiting(true)
+      }
     }
     const handleRoutesChange = (data: routesType[]) => {
       setRoutes(data)
@@ -86,8 +97,8 @@ const App = memo(() => {
         const token = localStorage.getItem("token")
         if (token) {
           try {
-            const res = await dispatch(asyncGetUserInfo({}))
-            dispatch(setUserInfo(res.payload))
+            const res = await asyncGetUserInfo()
+            asyncInitialRoutes(res.permissions || [])
           } catch {
             if (!excludeRoutes.includes(location.pathname)) {
               message.error(t("error.notLoggedInDesc"))
@@ -105,7 +116,7 @@ const App = memo(() => {
 
       initializeApp()
     }
-  }, [dispatch, t, isInitialized, location.pathname, navigate])
+  }, [t, isInitialized, location.pathname, navigate, asyncGetUserInfo, asyncInitialRoutes])
 
   // 当应用准备就绪时，触发Loading退出动画
   useEffect(() => {
@@ -127,7 +138,7 @@ const App = memo(() => {
   // 计算Header的左边距
   const getHeaderPaddingLeft = () => {
     const menuWidth = isMenuCollapsed ? style.MENU_CLOSE_WIDTH : style.MEMU_OPEN_WIDTH
-    return menuWidth + 12 // 增加12px的额外间距
+    return menuWidth + 12
   }
 
   return (
@@ -141,8 +152,8 @@ const App = memo(() => {
           fullScreen
           size="large"
           text={import.meta.env.VITE_PROJECT_NAME}
-          isExiting={showLoading ? isLoadingExiting : false}
-          onExitComplete={showLoading ? handleLoadingExitComplete : undefined}
+          isExiting={isLoadingExiting}
+          onExitComplete={handleLoadingExitComplete}
         />
       )}
 

@@ -1,14 +1,17 @@
 import React, { memo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { useDispatch, useSelector, shallowEqual } from "react-redux"
-import type { ReactNode } from "react"
+
 import { UserCenterStyled } from "./style"
+
 import { Popover, message } from "antd"
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons"
-import { setToken, setUserInfo } from "@/store/modules/user"
-import type { RootState } from "@/store"
 import AvatarImage from "@/assets/image/avatar.jpg"
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons"
+
+import { userStore } from "@/store/user"
+import { useShallow } from "zustand/shallow"
+
+import type { ReactNode } from "react"
 
 interface UserCenterType {
   children?: ReactNode
@@ -18,14 +21,15 @@ const UserCenter: React.FC<UserCenterType> = memo(() => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const userInfo = useSelector((state: RootState) => state.user.userInfo, shallowEqual)
+  const { setUserInfo, setToken, userInfo } = userStore(
+    useShallow((state) => ({ setUserInfo: state.setUserInfo, setToken: state.setToken, userInfo: state.userInfo }))
+  )
 
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("userInfo")
-    dispatch(setToken(""))
-    dispatch(setUserInfo({}))
+    setToken("")
+    setUserInfo({})
     message.success(t("user.logout") + " " + t("user.success"))
     navigate("/login")
     setOpen(false)

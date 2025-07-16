@@ -9,10 +9,12 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons"
-import { useSelector } from "react-redux"
 import { useTranslation } from "react-i18next"
-import { RootState } from "@/store"
+import { userStore } from "@/store/user"
+import { useThemeStore } from "store/theme"
+import { useShallow } from "zustand/shallow"
 import { SecuritySettingsWrapper } from "./style.tsx"
+import { themeColors } from "@/const"
 
 interface SecuritySettingsProps {
   onPasswordChange?: (values: any) => void
@@ -28,7 +30,18 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
   const [phoneForm] = Form.useForm()
   const [emailForm] = Form.useForm()
   const { t } = useTranslation()
-  const userInfo = useSelector((state: RootState) => state.user.userInfo)
+  const userInfo = userStore((state) => state.userInfo)
+  const {
+    "primary-color": primaryColor,
+    "success-color": successColor,
+    "danger-color": dangerColor,
+  } = useThemeStore(
+    useShallow((state) => ({
+      "primary-color": state["primary-color"],
+      "success-color": state["success-color"],
+      "danger-color": state["danger-color"],
+    }))
+  )
 
   const handlePasswordChange = async (values: any) => {
     try {
@@ -73,7 +86,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
     {
       title: t("view.userInfo.loginPassword"),
       description: t("view.userInfo.passwordDescription"),
-      icon: <LockOutlined style={{ color: "#1890ff" }} />,
+      icon: <LockOutlined style={{ color: primaryColor }} />,
       status: t("view.userInfo.bound"),
       statusColor: "green",
       action: () => setPasswordModalVisible(true),
@@ -84,7 +97,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
       description: `${t("view.userInfo.boundPhone")}：${
         userInfo.phone ? userInfo.phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2") : t("view.userInfo.unbound")
       }`,
-      icon: <MobileOutlined style={{ color: "#52c41a" }} />,
+      icon: <MobileOutlined style={{ color: successColor }} />,
       status: userInfo.phone ? t("view.userInfo.bound") : t("view.userInfo.unbound"),
       statusColor: userInfo.phone ? "green" : "red",
       action: () => setPhoneModalVisible(true),
@@ -95,7 +108,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
       description: `${t("view.userInfo.boundEmail")}：${
         userInfo.email ? userInfo.email.replace(/(.{2}).*(@.*)/, "$1***$2") : t("view.userInfo.unbound")
       }`,
-      icon: <MailOutlined style={{ color: "#fa8c16" }} />,
+      icon: <MailOutlined style={{ color: themeColors.orange }} />,
       status: userInfo.email ? t("view.userInfo.bound") : t("view.userInfo.unbound"),
       statusColor: userInfo.email ? "green" : "red",
       action: () => setEmailModalVisible(true),
@@ -104,7 +117,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
     {
       title: t("view.userInfo.twoFactorAuth"),
       description: t("view.userInfo.twoFactorDescription"),
-      icon: <SafetyOutlined style={{ color: "#722ed1" }} />,
+      icon: <SafetyOutlined style={{ color: themeColors.purple }} />,
       status: t("view.userInfo.unbound"),
       statusColor: "red",
       action: () => message.info(t("view.userInfo.twoFactorFeature")),
@@ -132,15 +145,15 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {item.title}
                     {item.statusColor === "green" ? (
-                      <CheckCircleOutlined style={{ color: "#52c41a" }} />
+                      <CheckCircleOutlined style={{ color: successColor }} />
                     ) : (
-                      <CloseCircleOutlined style={{ color: "#ff4d4f" }} />
+                      <CloseCircleOutlined style={{ color: dangerColor }} />
                     )}
                   </div>
                 }
                 description={item.description}
               />
-              <div style={{ color: item.statusColor === "green" ? "#52c41a" : "#ff4d4f" }}>{item.status}</div>
+              <div style={{ color: item.statusColor === "green" ? successColor : dangerColor }}>{item.status}</div>
             </List.Item>
           )}
         />
@@ -158,7 +171,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
           form={passwordForm}
           onFinish={handlePasswordChange}
           submitter={{
-            render: (props, doms) => {
+            render: (_, doms) => {
               return (
                 <div style={{ textAlign: "right" }}>
                   <Button onClick={() => setPasswordModalVisible(false)} style={{ marginRight: 8 }}>
@@ -216,7 +229,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
           form={phoneForm}
           onFinish={handlePhoneBind}
           submitter={{
-            render: (props, doms) => {
+            render: (_, doms) => {
               return (
                 <div style={{ textAlign: "right" }}>
                   <Button onClick={() => setPhoneModalVisible(false)} style={{ marginRight: 8 }}>
@@ -265,7 +278,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ onPasswordChange, o
           form={emailForm}
           onFinish={handleEmailBind}
           submitter={{
-            render: (props, doms) => {
+            render: (_, doms) => {
               return (
                 <div style={{ textAlign: "right" }}>
                   <Button onClick={() => setEmailModalVisible(false)} style={{ marginRight: 8 }}>

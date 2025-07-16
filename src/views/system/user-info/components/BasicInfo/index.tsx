@@ -1,10 +1,9 @@
 import React, { useState } from "react"
 import { ProForm, ProFormText, ProFormSelect, ProFormTextArea, ProFormDatePicker } from "@ant-design/pro-components"
+import { userStore } from "@/store/user"
 import { Button, message, Card, Descriptions, Tag } from "antd"
 import { EditOutlined, SaveOutlined, CloseOutlined } from "@ant-design/icons"
-import { useSelector } from "react-redux"
 import { useTranslation } from "react-i18next"
-import { RootState } from "@/store"
 import { BasicInfoWrapper } from "./style.tsx"
 
 interface BasicInfoProps {
@@ -15,7 +14,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ onInfoUpdate }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [form] = ProForm.useForm()
   const { t } = useTranslation()
-  const userInfo = useSelector((state: RootState) => state.user.userInfo)
+  const userInfo = userStore((state) => state.userInfo)
 
   const handleEdit = () => {
     setIsEditing(true)
@@ -57,7 +56,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ onInfoUpdate }) => {
         {userInfo.username || "-"}
       </Descriptions.Item>
       <Descriptions.Item label={t("view.userInfo.realName")} span={1}>
-        {userInfo.realName || "-"}
+        {userInfo.name || "-"}
       </Descriptions.Item>
       <Descriptions.Item label={t("view.userInfo.email")} span={1}>
         {userInfo.email || "-"}

@@ -1,5 +1,6 @@
-import React, { memo, useContext, useState, useEffect } from "react"
-import { ThemeContext } from "@/context/ThemeContext"
+import React, { memo, useState, useEffect } from "react"
+import { useThemeStore } from "store/theme"
+import { useShallow } from "zustand/shallow"
 import { LoadingStyled } from "./style.tsx"
 
 interface LoadingProps {
@@ -12,8 +13,8 @@ interface LoadingProps {
 
 const Loading: React.FC<LoadingProps> = memo(
   ({ text = "Keyie Template", size = "medium", fullScreen = false, isExiting = false, onExitComplete }) => {
-    const theme = useContext(ThemeContext)
-    const isDark = theme.theme === "dark"
+    const theme = useThemeStore(useShallow((state) => state.theme))
+    const isDark = theme === "dark"
     const [shouldRender, setShouldRender] = useState(true)
 
     useEffect(() => {

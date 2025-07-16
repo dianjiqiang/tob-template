@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { themeColors } from "@/const"
 
 export const HeaderLeftStyled = styled.div`
   & {
@@ -6,16 +7,16 @@ export const HeaderLeftStyled = styled.div`
     align-items: center;
 
     .refresh-btn {
-      color: #8c8c8c;
+      color: ${themeColors.textTertiary};
       cursor: pointer;
       transition: color 0.2s ease;
-      
+
       &:hover {
-        color: #595959;
+        color: ${themeColors.textSecondary};
       }
-      
+
       &:active {
-        color: #262626;
+        color: ${themeColors.textPrimary};
       }
     }
 

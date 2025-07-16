@@ -1,15 +1,14 @@
 import React, { memo, useMemo, useCallback, type ReactNode } from "react"
 import { Breadcrumb } from "antd"
-import { useSelector, shallowEqual } from "react-redux"
 import { useTranslation } from "react-i18next"
 
+import { systemStore } from "@/store/system"
 import { HeaderLeftStyled } from "./style"
 
 import { ReloadOutlined } from "@ant-design/icons"
 
 import { getBreadcrumbItems } from "./utils"
 import { routesType } from "@/router/type"
-import type { RootState } from "@/store"
 
 interface HeaderLeftType {
   children?: ReactNode
@@ -19,12 +18,7 @@ interface HeaderLeftType {
 const HeaderLeft: React.FC<HeaderLeftType> = memo((props) => {
   const { t } = useTranslation()
 
-  const { keyPath } = useSelector(
-    (state: RootState) => ({
-      keyPath: state.system.keyPath,
-    }),
-    shallowEqual
-  )
+  const keyPath = systemStore((state) => state.keyPath)
 
   const handleRefreshClick = useCallback(() => {
     window.location.reload()

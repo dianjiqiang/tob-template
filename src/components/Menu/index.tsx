@@ -1,12 +1,12 @@
 import React, { memo, useMemo, useState, useEffect, useCallback, type ReactNode } from "react"
-import { shallowEqual, useSelector, useDispatch } from "react-redux"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Menu as AntdMenu, type MenuProps } from "antd"
 import { useTranslation } from "react-i18next"
 import classnames from "classnames"
 
 import { MenuStyled } from "./style"
-import { setKeyPath } from "@/store/modules/system"
+import { userStore } from "@/store/user"
+import { systemStore } from "@/store/system"
 import { getMenuToRoutes } from "@/utils/getMenuToRoutes"
 import eventBus from "@/utils/eventbus"
 
@@ -17,7 +17,6 @@ import Logo from "@/assets/image/logo.png"
 import { style } from "@/const"
 
 import type { routesType } from "@/router/type"
-import type { RootState } from "@/store"
 
 interface MenuType {
   children?: ReactNode
@@ -29,8 +28,8 @@ type MenuItem = Required<MenuProps>["items"][number]
 const Menu: React.FC<MenuType> = memo((props) => {
   const { t } = useTranslation()
 
-  const { userInfo } = useSelector((state: RootState) => state.user, shallowEqual)
-  const dispatch = useDispatch()
+  const setKeyPath = systemStore((state) => state.setKeyPath)
+  const userInfo = userStore((state) => state.userInfo)
 
   const getMenuItem = useMemo(() => {
     if (Array.isArray(props.routes)) {
@@ -81,8 +80,8 @@ const Menu: React.FC<MenuType> = memo((props) => {
       resultArr.push(totalArr.join("/"))
       totalArr.pop()
     }
-    dispatch(setKeyPath([...resultArr, pathName]))
-  }, [dispatch, pathName])
+    setKeyPath([...resultArr, pathName])
+  }, [pathName, setKeyPath])
 
   const [isFoundMenu, setIsFoundMenu] = useState(localStorage.getItem("isFoundMenu") === "true")
   const [menuWidth, setMenuWidth] = useState<number | string>(

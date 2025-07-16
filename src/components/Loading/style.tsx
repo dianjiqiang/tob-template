@@ -1,4 +1,5 @@
 import styled, { keyframes, css } from "styled-components"
+import { themeColors } from "@/const"
 
 // 分离的动画定义
 const bounce = keyframes`
@@ -339,7 +340,7 @@ export const LoadingStyled = styled.div<LoadingStyledProps>`
       }
     }};
     font-weight: 500;
-    color: ${(props) => (props.$isDark ? "#ffffff" : "#333333")};
+    color: ${(props) => (props.$isDark ? themeColors.darkTextPrimary : themeColors.textPrimary)};
     text-shadow: ${(props) => (props.$isDark ? "0 0 10px rgba(255, 255, 255, 0.3)" : "0 0 10px rgba(0, 0, 0, 0.1)")};
   }
 

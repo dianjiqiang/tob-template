@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { themeColors } from "@/const"
 
 export const MenuStyled = styled.div`
   position: fixed;
@@ -55,7 +56,7 @@ export const MenuStyled = styled.div`
       transition: all 0.3s ease;
 
       &:hover {
-        color: #1890ff;
+        color: ${themeColors.primary};
       }
     }
   }

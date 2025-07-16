@@ -1,9 +1,9 @@
-import React, { memo, useContext } from "react"
+import React, { memo } from "react"
 import type { ReactNode } from "react"
 import { ThemeChangeStyled } from "./style"
 import { Switch } from "antd"
-
-import { ThemeContext } from "context/ThemeContext"
+import { useThemeStore } from "store/theme"
+import { useShallow } from "zustand/shallow"
 
 interface ThemeChangeType {
   children?: ReactNode
@@ -13,19 +13,22 @@ type ChangeEvent = React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTM
 type MouseEvent = React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
 
 const ThemeChange: React.FC<ThemeChangeType> = memo((props) => {
-  const context = useContext(ThemeContext)
-
-  const { theme } = context
+  const { theme, toggleTheme } = useThemeStore(
+    useShallow((state) => ({
+      theme: state.theme,
+      toggleTheme: state.toggleTheme,
+    }))
+  )
 
   const handleChangeTheme = (_: boolean, event: ChangeEvent) => {
     const transition = document.startViewTransition(() => {
-      context.setThemeState!(context.theme === "light" ? "dark" : "light")
+      toggleTheme()
     })
 
     transition.ready.then(() => {
       const { clientX, clientY } = event as MouseEvent
       const radius = Math.hypot(Math.max(clientX, innerWidth - clientX), Math.max(clientY, innerHeight - clientY))
-      if (context.theme === "dark") {
+      if (theme === "dark") {
         document.documentElement.animate(
           {
             clipPath: [`circle(0% at ${clientX}px ${clientY}px)`, `circle(${radius}px at ${clientX}px ${clientY}px)`],

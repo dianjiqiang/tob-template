@@ -1,7 +1,8 @@
 import styled from "styled-components"
-import { ThemeDataType } from "@/context/ThemeContext"
+import { themeColors } from "@/const"
+import type { ThemeType } from "store/theme"
 
-export const UserCenterStyled = styled.div<ThemeDataType>`
+export const UserCenterStyled = styled.div<ThemeType>`
   .popover-wrapper {
     position: relative;
   }
@@ -58,12 +59,12 @@ export const UserCenterStyled = styled.div<ThemeDataType>`
   }
 
   .ant-popover-inner {
-    padding: 8px 0 !important;
-    width: 200px !important;
-    border-radius: 12px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(10px) !important;
+    padding: 8px 0;
+    width: 200px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 
     .user-popover-content {
       display: flex;
@@ -79,14 +80,14 @@ export const UserCenterStyled = styled.div<ThemeDataType>`
       .user-info-name {
         font-size: 16px;
         font-weight: 600;
-        color: #1e293b;
+        color: ${themeColors.textPrimary};
         margin-bottom: 4px;
         line-height: 1.4;
       }
 
       .user-info-phone {
         font-size: 13px;
-        color: #64748b;
+        color: ${themeColors.textSecondary};
         line-height: 1.3;
       }
     }
@@ -98,16 +99,16 @@ export const UserCenterStyled = styled.div<ThemeDataType>`
     }
 
     .popover-item {
-      user-select: none !important;
+      user-select: none;
       box-sizing: border-box;
-      padding: 12px 20px !important;
-      margin: 3px 12px !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 14px !important;
-      cursor: pointer !important;
-      transition: all 0.3s ease !important;
-      border-radius: 8px !important;
+      padding: 12px 20px;
+      margin: 3px 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 8px;
       position: relative;
       overflow: hidden;
 
@@ -123,9 +124,13 @@ export const UserCenterStyled = styled.div<ThemeDataType>`
       }
 
       &:hover {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
-        transform: translateX(4px) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        background: linear-gradient(
+          135deg,
+          ${themeColors.backgroundTertiary} 0%,
+          ${themeColors.backgroundSecondary} 100%
+        );
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
         &::before {
           left: 100%;
@@ -134,14 +139,14 @@ export const UserCenterStyled = styled.div<ThemeDataType>`
 
       .item-icon {
         font-size: 16px;
-        color: #64748b;
+        color: ${themeColors.textSecondary};
         flex-shrink: 0;
         transition: all 0.3s ease;
       }
 
       .item-label {
         font-size: 15px;
-        color: #475569;
+        color: ${themeColors.textPrimary};
         font-weight: 600;
         flex: 1;
         transition: all 0.3s ease;
@@ -159,6 +164,6 @@ export const UserCenterStyled = styled.div<ThemeDataType>`
   }
 
   .ant-popover-arrow {
-    display: none !important;
+    display: none;
   }
 `

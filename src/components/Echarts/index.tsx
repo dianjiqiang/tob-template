@@ -1,7 +1,8 @@
-import React, { memo, useRef, useEffect, useCallback, useContext } from "react"
+import React, { memo, useRef, useEffect, useCallback } from "react"
 import * as echarts from "echarts"
 import type { EChartsOption } from "echarts"
-import { ThemeContext } from "@/context/ThemeContext"
+import { useThemeStore } from "store/theme"
+import { useShallow } from "zustand/shallow"
 import { createEchartsDarkTheme } from "@/assets/theme/echartsTheme"
 import { EchartsStyled } from "./style"
 
@@ -15,8 +16,21 @@ interface EchartsProps {
 
 const Echarts: React.FC<EchartsProps> = memo((props) => {
   const { options, className, style, width = "100%", height = 300 } = props
-  const theme = useContext(ThemeContext)
-  const isDark = theme.theme === "dark"
+  const themeData = useThemeStore(
+    useShallow((state) => ({
+      theme: state.theme,
+      background: state.background,
+      color: state.color,
+      "text-1": state["text-1"],
+      "text-2": state["text-2"],
+      "text-3": state["text-3"],
+      "hover-background": state["hover-background"],
+      "active-background": state["active-background"],
+      "menu-border-line": state["menu-border-line"],
+      "active-hover-background": state["active-hover-background"],
+    }))
+  )
+  const isDark = themeData.theme === "dark"
   const chartRef = useRef<HTMLDivElement>(null)
   const chartInstanceRef = useRef<echarts.ECharts | null>(null)
   const resizeObserverRef = useRef<ResizeObserver | null>(null)
@@ -56,7 +70,7 @@ const Echarts: React.FC<EchartsProps> = memo((props) => {
 
       // 注册主题
       if (isDark) {
-        const customDarkTheme = createEchartsDarkTheme(theme)
+        const customDarkTheme = createEchartsDarkTheme(themeData)
         echarts.registerTheme("custom-dark", customDarkTheme)
       }
 
@@ -73,7 +87,7 @@ const Echarts: React.FC<EchartsProps> = memo((props) => {
     } catch (error) {
       console.error("ECharts initialization error:", error)
     }
-  }, [isDark, theme, checkContainerSize, options])
+  }, [isDark, themeData, checkContainerSize, options])
 
   // 延迟初始化
   const delayedInit = useCallback(() => {

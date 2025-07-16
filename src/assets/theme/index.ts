@@ -1,6 +1,6 @@
-import type { ThemeDataType } from "context/ThemeContext"
+import type { ThemeType } from "store/theme"
 
-export const getBodyStyle = (theme: ThemeDataType) => {
+export const getBodyStyle = (theme: ThemeType) => {
   return `
       background-color: ${theme.background};
       color: ${theme.color};

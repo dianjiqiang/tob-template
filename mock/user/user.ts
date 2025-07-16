@@ -24,7 +24,6 @@ export default [
   {
     url: "/basic-api/user-server/getCurrentInfo",
     method: "get",
-    timeout: 2000,
     response: () => {
       return {
         code: 200,

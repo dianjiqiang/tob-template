@@ -1,13 +1,15 @@
 import React, { memo, useState } from "react"
-import type { ReactNode } from "react"
 import { LoginFormStyled } from "./style"
 import { apiPostLogin } from "@/api/user"
-import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { setToken, asyncGetUserInfo, setUserInfo } from "@/store/modules/user"
+import { userStore } from "@/store/user"
+import { useShallow } from "zustand/shallow"
+import { Router } from "@/const"
 
 import { Button, Checkbox, Form, Input, Card, message } from "antd"
 import { useTranslation } from "react-i18next"
+
+import type { ReactNode } from "react"
 
 interface LoginFormType {
   children?: ReactNode
@@ -21,8 +23,15 @@ type FieldType = {
 
 const LoginForm: React.FC<LoginFormType> = memo(() => {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const [loginLoading, setLoginLoading] = useState(false)
+  const { setToken, asyncGetUserInfo, asyncInitialRoutes } = userStore(
+    useShallow((state) => ({
+      setToken: state.setToken,
+      asyncGetUserInfo: state.asyncGetUserInfo,
+      setUserInfo: state.setUserInfo,
+      asyncInitialRoutes: state.asyncInitialRoutes,
+    }))
+  )
 
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -34,10 +43,10 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
         setLoginLoading(true)
         try {
           // 登录接口调用
-          const res = await apiPostLogin(values)
+          const loginRes = await apiPostLogin(values)
 
-          localStorage.setItem("token", res.token)
-          dispatch(setToken(res.token))
+          localStorage.setItem("token", loginRes.token)
+          setToken(loginRes.token)
           if (values.remember === true) {
             localStorage.setItem("username", values.username)
             localStorage.setItem("password", values.password)
@@ -45,26 +54,17 @@ const LoginForm: React.FC<LoginFormType> = memo(() => {
             localStorage.setItem("username", values.username)
             localStorage.removeItem("password")
           }
-
-          // 获取用户信息并加载路由 - 这里会触发全局loading，但按钮loading会覆盖它
-          await dispatch(asyncGetUserInfo({}) as any)
-            .then((res: any) => {
-              dispatch(setUserInfo(res.payload))
-              // 路由加载完成后跳转
-              navigate("/analytics/statistics")
-            })
-            .catch(() => {
-              message.error(t("error.getUserInfoFailed"))
-            })
-        } catch (error) {
-          console.error(t("error.formValidationFailed"), error)
+          const userInfo = await asyncGetUserInfo()
+          await asyncInitialRoutes(userInfo.permissions || [])
+          navigate(Router.initialPath)
+        } catch {
+          message.error(t("error.getUserInfoFailed"))
         } finally {
           setLoginLoading(false)
         }
       })
       .catch((error) => {
         console.error(t("error.formValidationFailed"), error)
-        setLoginLoading(false)
       })
   }
 
